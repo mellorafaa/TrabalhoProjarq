@@ -14,6 +14,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.Ped
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.ListarPedidosUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests.PedidoSubmissaoRequest;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoResponse;
+import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SolicitarStatusPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SubmeterPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 
@@ -23,10 +24,13 @@ public class PedidoController {
 
     private final SubmeterPedidoUC submeterPedidoUC;
     private final ListarPedidosUC listarPedidosUC;
+    private final SolicitarStatusPedidoUC solicitarStatusPedidoUC;
 
-    public PedidoController(SubmeterPedidoUC submeterPedidoUC, ListarPedidosUC listarPedidosUC) {
+    public PedidoController(SubmeterPedidoUC submeterPedidoUC, ListarPedidosUC listarPedidosUC,
+            SolicitarStatusPedidoUC solicitarStatusPedidoUC) {
         this.submeterPedidoUC = submeterPedidoUC;
-        this.listarPedidosUC  = listarPedidosUC;
+        this.listarPedidosUC = listarPedidosUC;
+        this.solicitarStatusPedidoUC = solicitarStatusPedidoUC;
     }
 
     @GetMapping
@@ -39,6 +43,29 @@ public class PedidoController {
         return ResponseEntity.ok(presenters);
     }
 
+    @GetMapping("/{id}")
+    @CrossOrigin("*")
+    public ResponseEntity<PedidoPresenter> recuperarStatusPedido(
+            @org.springframework.web.bind.annotation.PathVariable long id) {
+
+        Pedido pedido = solicitarStatusPedidoUC.run(id);
+        if (pedido == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new PedidoPresenter(
+                            0,
+                            "NAO_ENCONTRADO",
+                            0,
+                            0,
+                            0,
+                            0,
+                            false,
+                            "Pedido não encontrado",
+                            List.of()));
+        }
+
+        return ResponseEntity.ok(montarPresenter(new PedidoResponse(pedido, true, "OK")));
+    }
+
     @PostMapping
     @CrossOrigin("*")
     public ResponseEntity<PedidoPresenter> submeterPedido(
@@ -46,8 +73,7 @@ public class PedidoController {
 
         PedidoResponse response = submeterPedidoUC.run(
                 request.getClienteCpf(),
-                request.getItens()
-        );
+                request.getItens());
 
         PedidoPresenter presenter = montarPresenter(response);
 
@@ -63,19 +89,16 @@ public class PedidoController {
         if (!response.isAprovado() || response.getPedido() == null) {
             return new PedidoPresenter(
                     0, "NEGADO", 0, 0, 0, 0,
-                    false, response.getMensagem(), List.of()
-            );
+                    false, response.getMensagem(), List.of());
         }
 
-        List<PedidoPresenter.ItemPedidoPresenter> itensPresenter =
-                response.getPedido().getItens().stream()
-                        .map(item -> new PedidoPresenter.ItemPedidoPresenter(
-                                item.getItem().getId(),
-                                item.getItem().getDescricao(),
-                                item.getItem().getPreco(),
-                                item.getQuantidade()
-                        ))
-                        .collect(Collectors.toList());
+        List<PedidoPresenter.ItemPedidoPresenter> itensPresenter = response.getPedido().getItens().stream()
+                .map(item -> new PedidoPresenter.ItemPedidoPresenter(
+                        item.getItem().getId(),
+                        item.getItem().getDescricao(),
+                        item.getItem().getPreco(),
+                        item.getQuantidade()))
+                .collect(Collectors.toList());
 
         return new PedidoPresenter(
                 response.getPedido().getId(),
@@ -86,7 +109,6 @@ public class PedidoController {
                 response.getPedido().getValorCobrado(),
                 response.isAprovado(),
                 response.getMensagem(),
-                itensPresenter
-        );
+                itensPresenter);
     }
 }
