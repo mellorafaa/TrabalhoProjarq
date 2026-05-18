@@ -24,4 +24,12 @@ public class RecuperarCardapioUC {
         List<Produto> sugestoes = cardapioService.recuperaSugestoesDoChef();
         return new CardapioResponse(cardapio,sugestoes);
     }
+
+    public CardapioResponse run(){
+        Cardapio cardapio = cardapioService.recuperaCardapioSemId();
+        List<Produto> sugestoes = cardapioService.recuperaSugestoesDoChef();
+        return new CardapioResponse(cardapio,sugestoes);
+    }
+
+    
 }
