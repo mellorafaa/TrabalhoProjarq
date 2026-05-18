@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.PedidoPresenter;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.CancelarPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.ListarPedidosUC;
+import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.PagarPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests.PedidoSubmissaoRequest;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CancelarPedidoResponse;
+import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PagarPedidoResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SubmeterPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
@@ -27,13 +29,16 @@ public class PedidoController {
     private final SubmeterPedidoUC submeterPedidoUC;
     private final ListarPedidosUC  listarPedidosUC;
     private final CancelarPedidoUC cancelarPedidoUC;
+    private final PagarPedidoUC    pagarPedidoUC;
 
     public PedidoController(SubmeterPedidoUC submeterPedidoUC,
                             ListarPedidosUC listarPedidosUC,
-                            CancelarPedidoUC cancelarPedidoUC) {
+                            CancelarPedidoUC cancelarPedidoUC,
+                            PagarPedidoUC pagarPedidoUC) {
         this.submeterPedidoUC = submeterPedidoUC;
         this.listarPedidosUC  = listarPedidosUC;
         this.cancelarPedidoUC = cancelarPedidoUC;
+        this.pagarPedidoUC    = pagarPedidoUC;
     }
 
     @GetMapping
@@ -73,6 +78,20 @@ public class PedidoController {
         CancelarPedidoResponse response = cancelarPedidoUC.run(id);
 
         if (response.isCancelado()) {
+            return ResponseEntity.ok(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
+    }
+
+    @PostMapping("/{id}/pagar")
+    @CrossOrigin("*")
+    public ResponseEntity<PagarPedidoResponse> pagarPedido(
+            @PathVariable(value = "id") long id) {
+
+        PagarPedidoResponse response = pagarPedidoUC.run(id);
+
+        if (response.isPago()) {
             return ResponseEntity.ok(response);
         }
 
