@@ -193,4 +193,21 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
 
         return count != null ? count : 0L;
     }
+
+    @Override
+    public void atualizarStatus(long id, Pedido.Status novoStatus) {
+        String sql = "UPDATE pedidos SET status = ? WHERE id = ?";
+        jdbcTemplate.update(sql, novoStatus.name(), id);
+    }
+
+    @Override
+    public void registrarPagamento(long id, LocalDateTime dataHoraPagamento) {
+        String sql = "UPDATE pedidos SET status = ?, data_hora_pagamento = ? WHERE id = ?";
+        jdbcTemplate.update(
+                sql,
+                Pedido.Status.PAGO.name(),
+                Timestamp.valueOf(dataHoraPagamento),
+                id
+        );
+    }
 }
