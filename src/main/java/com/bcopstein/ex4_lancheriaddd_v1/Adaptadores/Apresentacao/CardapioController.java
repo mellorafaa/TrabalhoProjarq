@@ -53,4 +53,19 @@ public class CardapioController {
             .toList();
          return lstCardapios;
     }
+
+    @GetMapping("")
+    @CrossOrigin("*")
+    public CardapioPresenter recuperaCardapioSemId(){
+        CardapioResponse cardapioResponse = recuperaCardapioUC.run();
+        Set<Long> conjIdSugestoes = new HashSet<>(cardapioResponse.getSugestoesDoChef().stream()
+            .map(produto->produto.getId())
+            .toList());
+        CardapioPresenter cardapioPresenter = new CardapioPresenter(cardapioResponse.getCardapio().getCabecalhoCardapio().titulo());
+        for(Produto produto:cardapioResponse.getCardapio().getProdutos()){
+            boolean sugestao = conjIdSugestoes.contains(produto.getId());
+            cardapioPresenter.insereItem(produto.getId(), produto.getDescricao(), produto.getPreco(), sugestao);
+        }
+        return cardapioPresenter;
+    }
 }

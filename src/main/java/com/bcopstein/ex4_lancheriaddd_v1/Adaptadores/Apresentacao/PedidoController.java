@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.PedidoPresenter;
+import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.PedidoStatusPresenter;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.CancelarPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.ListarPedidosUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.PagarPedidoUC;
@@ -19,6 +20,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests.PedidoSubmissaoReque
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CancelarPedidoResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PagarPedidoResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoResponse;
+import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SolicitarStatusPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SubmeterPedidoUC;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 
@@ -39,6 +41,21 @@ public class PedidoController {
         this.listarPedidosUC  = listarPedidosUC;
         this.cancelarPedidoUC = cancelarPedidoUC;
         this.pagarPedidoUC    = pagarPedidoUC;
+    private final ListarPedidosUC listarPedidosUC;
+    private final SolicitarStatusPedidoUC solicitarStatusPedidoUC;
+    private final CancelarPedidoUC cancelarPedidoUC;
+    private final PagarPedidoUC pagarPedidoUC;
+
+    public PedidoController(SubmeterPedidoUC submeterPedidoUC,
+                            ListarPedidosUC listarPedidosUC,
+                            SolicitarStatusPedidoUC solicitarStatusPedidoUC,
+                            CancelarPedidoUC cancelarPedidoUC,
+                            PagarPedidoUC pagarPedidoUC) {
+        this.submeterPedidoUC = submeterPedidoUC;
+        this.listarPedidosUC = listarPedidosUC;
+        this.solicitarStatusPedidoUC = solicitarStatusPedidoUC;
+        this.cancelarPedidoUC = cancelarPedidoUC;
+        this.pagarPedidoUC = pagarPedidoUC;
     }
 
     @GetMapping
@@ -51,11 +68,19 @@ public class PedidoController {
         return ResponseEntity.ok(presenters);
     }
 
+    @GetMapping("/{id}")
+    @CrossOrigin("*")
+    public ResponseEntity<PedidoStatusPresenter> recuperarStatusPedido(@PathVariable long id) {
+        Pedido pedido = solicitarStatusPedidoUC.run(id);
+        if (pedido == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(new PedidoStatusPresenter(pedido.getId(), pedido.getStatus().name()));
+    }
+
     @PostMapping
     @CrossOrigin("*")
-    public ResponseEntity<PedidoPresenter> submeterPedido(
-            @RequestBody PedidoSubmissaoRequest request) {
-
+    public ResponseEntity<PedidoPresenter> submeterPedido(@RequestBody PedidoSubmissaoRequest request) {
         PedidoResponse response = submeterPedidoUC.run(
                 request.getClienteCpf(),
                 request.getEnderecoEntrega(),
@@ -76,6 +101,7 @@ public class PedidoController {
     public ResponseEntity<CancelarPedidoResponse> cancelarPedido(
             @PathVariable(value = "id") long id) {
 
+    public ResponseEntity<CancelarPedidoResponse> cancelarPedido(@PathVariable long id) {
         CancelarPedidoResponse response = cancelarPedidoUC.run(id);
 
         if (response.isCancelado()) {
@@ -90,6 +116,7 @@ public class PedidoController {
     public ResponseEntity<PagarPedidoResponse> pagarPedido(
             @PathVariable(value = "id") long id) {
 
+    public ResponseEntity<PagarPedidoResponse> pagarPedido(@PathVariable long id) {
         PagarPedidoResponse response = pagarPedidoUC.run(id);
 
         if (response.isPago()) {
@@ -118,15 +145,13 @@ public class PedidoController {
             );
         }
 
-        List<PedidoPresenter.ItemPedidoPresenter> itensPresenter =
-                response.getPedido().getItens().stream()
-                        .map(item -> new PedidoPresenter.ItemPedidoPresenter(
-                                item.getItem().getId(),
-                                item.getItem().getDescricao(),
-                                item.getItem().getPreco(),
-                                item.getQuantidade()
-                        ))
-                        .collect(Collectors.toList());
+        List<PedidoPresenter.ItemPedidoPresenter> itensPresenter = response.getPedido().getItens().stream()
+                .map(item -> new PedidoPresenter.ItemPedidoPresenter(
+                        item.getItem().getId(),
+                        item.getItem().getDescricao(),
+                        item.getItem().getPreco(),
+                        item.getQuantidade()))
+                .collect(Collectors.toList());
 
         return new PedidoPresenter(
                 response.getPedido().getId(),
