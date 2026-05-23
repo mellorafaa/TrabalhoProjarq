@@ -287,6 +287,19 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
     }
 
     @Override
+    public long contarPedidosPagosPorCliente(String clienteCpf, LocalDateTime desde) {
+        String sql =
+            "SELECT COUNT(*) FROM pedidos " +
+            "WHERE cliente_cpf = ? AND data_criacao >= ? " +
+            "  AND (status = 'PAGO' OR status = 'ENTREGUE')";
+
+        Long count = jdbcTemplate.queryForObject(
+                sql, Long.class, clienteCpf, Timestamp.valueOf(desde));
+
+        return count != null ? count : 0L;
+    }
+
+    @Override
     public List<Pedido> listarPorClienteCpf(String cpf) {
         String sql =
             "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +

@@ -25,9 +25,9 @@ public class DescontoService implements IDescontoService {
     public double calcularDesconto(double subtotal, String clienteCpf) {
         LocalDateTime vinteDiasAtras = LocalDateTime.now().minusDays(DIAS_HISTORICO);
 
-        long pedidosRecentes = pedidoRepository.contarPedidosRecentesPorCliente(clienteCpf, vinteDiasAtras);
+        long pedidosPagos = pedidoRepository.contarPedidosPagosPorCliente(clienteCpf, vinteDiasAtras);
 
-        if (pedidosRecentes > MINIMO_PEDIDOS_PARA_DESCONTO) {
+        if (pedidosPagos > MINIMO_PEDIDOS_PARA_DESCONTO) {
             return subtotal * TAXA_DESCONTO;
         }
 
