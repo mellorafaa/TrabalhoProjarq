@@ -19,6 +19,8 @@ public interface PedidoRepository {
 
     long contarPedidosRecentesPorCliente(String clienteCpf, LocalDateTime desde);
 
+    List<Pedido> listarPorClienteCpf(String cpf);
+
     void atualizarStatus(long id, Pedido.Status novoStatus);
 
     void registrarPagamento(long id, LocalDateTime dataHoraPagamento);
