@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
+// Classe RecuperaListaCardapiosUC: responsabilidade principal inferida pelo nome 
 
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CabecalhoCardapioResponse;
@@ -7,17 +8,18 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.CardapioService;
 @Component
 public class RecuperaListaCardapiosUC {
 
-    private final CardapioService cardapioService;
+  private final CardapioService cardapioService;
 
-    public RecuperaListaCardapiosUC(CardapioService cardapioService) {
-        this.cardapioService = cardapioService;
-    }
+  public RecuperaListaCardapiosUC(CardapioService cardapioService) {
+    this.cardapioService = cardapioService;
+  }
 
-    public CabecalhoCardapioResponse run() {
-        return new CabecalhoCardapioResponse(
-                cardapioService.recuperaListaDeCardapios().stream()
-                        .map(c -> new CabecalhoCardapioResponse.CabecalhoDTO(c.id(), c.titulo()))
-                        .toList()
-        );
-    }
+  // Método run: public run — descrição breve 
+  public CabecalhoCardapioResponse run() {
+    return new CabecalhoCardapioResponse(
+        cardapioService.recuperaListaDeCardapios().stream()
+            .map(c -> new CabecalhoCardapioResponse.CabecalhoDTO(c.id(), c.titulo()))
+            .toList()
+    );
+  }
 }

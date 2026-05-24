@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
+// Classe CardapioService: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 
@@ -9,27 +10,33 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.CabecalhoCardapio;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Cardapio;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 
+//Serviço de domínio responsável pelas operações relacionadas ao cardápio da lancheria
 @Service
 public class CardapioService {
-    private final CardapioRepository cardapioRepository;
+  private final CardapioRepository cardapioRepository;
 
-    public CardapioService(CardapioRepository cardapioRepository){
-        this.cardapioRepository = cardapioRepository;
-    }
+  //Injeta o repositório de cardápios
+  public CardapioService(CardapioRepository cardapioRepository){
+    this.cardapioRepository = cardapioRepository;
+  }
 
-    public Cardapio recuperaCardapio(long Id){
-        return cardapioRepository.recuperaPorId(Id);
-    }
+  //Recupera o cardápio completo pelo ID informado
+  public Cardapio recuperaCardapio(long Id){
+    return cardapioRepository.recuperaPorId(Id);
+  }
 
-    public List<CabecalhoCardapio> recuperaListaDeCardapios(){
-        return cardapioRepository.cardapiosDisponiveis();
-    }
+  //Retorna a lista de cabeçalhos de todos os cardápios disponíveis
+  public List<CabecalhoCardapio> recuperaListaDeCardapios(){
+    return cardapioRepository.cardapiosDisponiveis();
+  }
 
-    public List<Produto> recuperaSugestoesDoChef(){
-        return cardapioRepository.indicacoesDoChef();
-    }
+  //Retorna a lista de produtos sugeridos pelo chef
+  public List<Produto> recuperaSugestoesDoChef(){
+    return cardapioRepository.indicacoesDoChef();
+  }
 
-    public Cardapio recuperaCardapioSemId(){
-        return cardapioRepository.recuperaPorId(1);
-    }
+  //Recupera o cardápio padrão (ID 1) quando nenhum ID é informado
+  public Cardapio recuperaCardapioSemId(){
+    return cardapioRepository.recuperaPorId(1);
+  }
 }

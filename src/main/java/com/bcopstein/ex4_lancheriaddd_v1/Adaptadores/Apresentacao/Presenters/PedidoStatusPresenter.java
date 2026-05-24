@@ -1,19 +1,22 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters;
+// Classe PedidoStatusPresenter: responsabilidade principal inferida pelo nome 
 
 public class PedidoStatusPresenter {
-    private final long id;
-    private final String status;
+  private final long id;
+  private final String status;
 
-    public PedidoStatusPresenter(long id, String status) {
-        this.id = id;
-        this.status = status;
-    }
+  public PedidoStatusPresenter(long id, String status) {
+    this.id = id;
+    this.status = status;
+  }
 
-    public long getId() {
-        return id;
-    }
+  // Método getId: public getId — descrição breve 
+  public long getId() {
+    return id;
+  }
 
-    public String getStatus() {
-        return status;
-    }
+  // Método getStatus: public getStatus — descrição breve 
+  public String getStatus() {
+    return status;
+  }
 }

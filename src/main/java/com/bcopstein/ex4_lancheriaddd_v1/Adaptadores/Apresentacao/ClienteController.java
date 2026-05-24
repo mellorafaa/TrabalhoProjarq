@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
+// Classe ClienteController: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,25 +18,27 @@ import com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters.Cli
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final RegistrarClienteUC registrarClienteUC;
-    private final ListarClientesUC listarClientesUC;
+  private final RegistrarClienteUC registrarClienteUC;
+  private final ListarClientesUC listarClientesUC;
 
-    public ClienteController(RegistrarClienteUC registrarClienteUC, ListarClientesUC listarClientesUC) {
-        this.registrarClienteUC = registrarClienteUC;
-        this.listarClientesUC = listarClientesUC;
-    }
+  public ClienteController(RegistrarClienteUC registrarClienteUC, ListarClientesUC listarClientesUC) {
+    this.registrarClienteUC = registrarClienteUC;
+    this.listarClientesUC = listarClientesUC;
+  }
 
-    @GetMapping
-    @CrossOrigin("*")
-    public List<ClientePresenter> listarClientes() {
-        return listarClientesUC.run().stream()
-                .map(r -> new ClientePresenter(r.cpf(), r.nome(), r.celular(), r.endereco(), r.email()))
-                .toList();
-    }
+  @GetMapping
+  @CrossOrigin("*")
+  // Método listarClientes: public listarClientes — descrição breve 
+  public List<ClientePresenter> listarClientes() {
+    return listarClientesUC.run().stream()
+        .map(r -> new ClientePresenter(r.cpf(), r.nome(), r.celular(), r.endereco(), r.email()))
+        .toList();
+  }
 
-    @PostMapping
-    @CrossOrigin("*")
-    public RegistrarClienteResponse registrarCliente(@RequestBody RegistrarClienteRequest request) {
-        return registrarClienteUC.run(request);
-    }
+  @PostMapping
+  @CrossOrigin("*")
+  // Método registrarCliente: public registrarCliente — descrição breve 
+  public RegistrarClienteResponse registrarCliente(@RequestBody RegistrarClienteRequest request) {
+    return registrarClienteUC.run(request);
+  }
 }

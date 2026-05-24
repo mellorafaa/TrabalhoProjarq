@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
+// Classe IngredientesRepositoryJDBC: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 
@@ -10,31 +11,33 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Ingrediente;
 
 @Repository
 public class IngredientesRepositoryJDBC implements IngredientesRepository {
-    private final JdbcTemplate jdbcTemplate;
+  private final JdbcTemplate jdbcTemplate;
 
-    public IngredientesRepositoryJDBC(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+  public IngredientesRepositoryJDBC(JdbcTemplate jdbcTemplate) {
+    this.jdbcTemplate = jdbcTemplate;
+  }
 
-    @Override
-    public List<Ingrediente> recuperaTodos() {
-        String sql = "SELECT id, descricao FROM ingredientes";
-        List<Ingrediente> ingredientes = this.jdbcTemplate.query(
-                sql,
-                ps -> {
-                }, // Sem parâmetros
-                (rs, rowNum) -> new Ingrediente(rs.getLong("id"), rs.getString("descricao")));
-        return ingredientes;
-    }
+  @Override
+  // Método recuperaTodos: public recuperaTodos — descrição breve 
+  public List<Ingrediente> recuperaTodos() {
+    String sql = "SELECT id, descricao FROM ingredientes";
+    List<Ingrediente> ingredientes = this.jdbcTemplate.query(
+        sql,
+        ps -> {
+        }, // Sem parâmetros
+        (rs, rowNum) -> new Ingrediente(rs.getLong("id"), rs.getString("descricao")));
+    return ingredientes;
+  }
 
-    @Override
-    public List<Ingrediente> recuperaIngredientesReceita(long id) {
-        String sql = "SELECT i.id, i.descricao FROM ingredientes i " +
-                "JOIN receita_ingrediente ri ON i.id = ri.ingrediente_id " +
-                "WHERE ri.receita_id = ?";
-        return jdbcTemplate.query(
-                sql,
-                ps -> ps.setLong(1, id),
-                (rs, rowNum) -> new Ingrediente(rs.getLong("id"), rs.getString("descricao")));
-    }
+  @Override
+  // Método recuperaIngredientesReceita: public recuperaIngredientesReceita — descrição breve 
+  public List<Ingrediente> recuperaIngredientesReceita(long id) {
+    String sql = "SELECT i.id, i.descricao FROM ingredientes i " +
+        "JOIN receita_ingrediente ri ON i.id = ri.ingrediente_id " +
+        "WHERE ri.receita_id = ?";
+    return jdbcTemplate.query(
+        sql,
+        ps -> ps.setLong(1, id),
+        (rs, rowNum) -> new Ingrediente(rs.getLong("id"), rs.getString("descricao")));
+  }
 }

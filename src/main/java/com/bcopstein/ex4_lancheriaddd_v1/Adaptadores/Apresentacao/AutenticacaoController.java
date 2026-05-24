@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
+// Classe AutenticacaoController: responsabilidade principal inferida pelo nome 
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,35 +17,35 @@ import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.TokenResponse;
 @RequestMapping("/autenticacao")
 @CrossOrigin("*")
 public class AutenticacaoController {
-    
-    private final FazerLoginUC fazerLoginUC;
-    
-    public AutenticacaoController(FazerLoginUC fazerLoginUC) {
-        this.fazerLoginUC = fazerLoginUC;
-    }
-    
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        try {
-            if (loginRequest == null || loginRequest.getEmail() == null || loginRequest.getSenha() == null) {
-                return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("{\"erro\": \"Email e senha são obrigatórios\"}");
-            }
+  
+  private final FazerLoginUC fazerLoginUC;
+  
+  public AutenticacaoController(FazerLoginUC fazerLoginUC) {
+    this.fazerLoginUC = fazerLoginUC;
+  }
+  
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    try {
+      if (loginRequest == null || loginRequest.getEmail() == null || loginRequest.getSenha() == null) {
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body("{\"erro\": \"Email e senha são obrigatórios\"}");
+      }
 
-            TokenResponse tokenResponse = fazerLoginUC.executar(loginRequest);
-            TokenPresenter presenter = new TokenPresenter(tokenResponse);
-            
-            return ResponseEntity.ok(presenter);
-            
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                .status(HttpStatus.UNAUTHORIZED)
-                .body("{\"erro\": \"" + e.getMessage() + "\"}");
-        } catch (Exception e) {
-            return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("{\"erro\": \"Erro ao processar login\"}");
-        }
+      TokenResponse tokenResponse = fazerLoginUC.executar(loginRequest);
+      TokenPresenter presenter = new TokenPresenter(tokenResponse);
+      
+      return ResponseEntity.ok(presenter);
+      
+    } catch (IllegalArgumentException e) {
+      return ResponseEntity
+        .status(HttpStatus.UNAUTHORIZED)
+        .body("{\"erro\": \"" + e.getMessage() + "\"}");
+    } catch (Exception e) {
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body("{\"erro\": \"Erro ao processar login\"}");
     }
+  }
 }

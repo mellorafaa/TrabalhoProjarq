@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
+// Classe CancelarPedidoUC: responsabilidade principal inferida pelo nome 
 
 import org.springframework.stereotype.Component;
 
@@ -9,51 +10,53 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 @Component
 public class CancelarPedidoUC {
 
-    private final PedidoRepository pedidoRepository;
+  private final PedidoRepository pedidoRepository;
 
-    public CancelarPedidoUC(PedidoRepository pedidoRepository) {
-        this.pedidoRepository = pedidoRepository;
+  public CancelarPedidoUC(PedidoRepository pedidoRepository) {
+    this.pedidoRepository = pedidoRepository;
+  }
+
+  // Método run: public run — descrição breve 
+  public CancelarPedidoResponse run(long idPedido) {
+
+    Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
+    if (pedido == null) {
+      return new CancelarPedidoResponse(
+        false,
+        "Pedido não encontrado com o id: " + idPedido,
+        idPedido
+      );
     }
 
-    public CancelarPedidoResponse run(long idPedido) {
-
-        Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
-        if (pedido == null) {
-            return new CancelarPedidoResponse(
-                false,
-                "Pedido não encontrado com o id: " + idPedido,
-                idPedido
-            );
-        }
-
-        if (pedido.getStatus() != Pedido.Status.APROVADO) {
-            return new CancelarPedidoResponse(
-                false,
-                construirMotivoRejeicao(pedido.getStatus()),
-                idPedido
-            );
-        }
-
-        pedido.cancelar();
-        pedidoRepository.atualizarStatus(pedido.getId(), pedido.getStatus());
-
-        return new CancelarPedidoResponse(
-            true,
-            "Pedido " + idPedido + " cancelado com sucesso.",
-            idPedido
-        );
+    if (pedido.getStatus() != Pedido.Status.APROVADO) {
+      return new CancelarPedidoResponse(
+        false,
+        construirMotivoRejeicao(pedido.getStatus()),
+        idPedido
+      );
     }
 
-    private String construirMotivoRejeicao(Pedido.Status statusAtual) {
-        return switch (statusAtual) {
-            case PAGO ->
-                "Pedido já foi pago e não pode ser cancelado.";
-            case CANCELADO ->
-                "Pedido já está cancelado.";
-            case NOVO ->
-                "Pedido ainda não foi aprovado (status: NOVO).";
-            default ->
-                "Pedido não pode ser cancelado. Status atual: " + statusAtual + ".";
-        };
-    }
+    pedido.cancelar();
+    pedidoRepository.atualizarStatus(pedido.getId(), pedido.getStatus());
+
+    return new CancelarPedidoResponse(
+      true,
+      "Pedido " + idPedido + " cancelado com sucesso.",
+      idPedido
+    );
+  }
+
+  // Método construirMotivoRejeicao: private construirMotivoRejeicao — descrição breve 
+  private String construirMotivoRejeicao(Pedido.Status statusAtual) {
+    return switch (statusAtual) {
+      case PAGO ->
+        "Pedido já foi pago e não pode ser cancelado.";
+      case CANCELADO ->
+        "Pedido já está cancelado.";
+      case NOVO ->
+        "Pedido ainda não foi aprovado (status: NOVO).";
+      default ->
+        "Pedido não pode ser cancelado. Status atual: " + statusAtual + ".";
+    };
+  }
 }

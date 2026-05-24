@@ -1,4 +1,7 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
+// Classe SubmeterPedidoUC: responsabilidade principal inferida pelo nome 
+
+// Caso de uso: Submeter pedido — valida entrada, verifica estoque, calcula valores e cria o pedido
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,81 +20,90 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoValidador;
 @Component
 public class SubmeterPedidoUC {
 
-    private final PedidoValidador pedidoValidador;
-    private final PedidoCalculador pedidoCalculador;
-    private final PedidoService pedidoService;
+  private final PedidoValidador pedidoValidador;
+  private final PedidoCalculador pedidoCalculador;
+  private final PedidoService pedidoService;
 
-    public SubmeterPedidoUC(
-            PedidoValidador pedidoValidador,
-            PedidoCalculador pedidoCalculador,
-            PedidoService pedidoService) {
-        this.pedidoValidador  = pedidoValidador;
-        this.pedidoCalculador = pedidoCalculador;
-        this.pedidoService    = pedidoService;
+  public SubmeterPedidoUC(
+      PedidoValidador pedidoValidador,
+      PedidoCalculador pedidoCalculador,
+      PedidoService pedidoService) {
+    this.pedidoValidador = pedidoValidador;
+    this.pedidoCalculador = pedidoCalculador;
+    this.pedidoService  = pedidoService;
+  }
+
+  // Construtor: injeta dependências do caso de uso
+
+  public PedidoResponse run(String clienteCpf, String enderecoEntrega,
+               List<ItemPedidoRequest> itensSolicitados) {
+
+    if (!validarDadosEntrada(itensSolicitados)) {
+      return new PedidoResponse(null, false,
+          "O pedido deve conter pelo menos um item", List.of());
     }
 
-    public PedidoResponse run(String clienteCpf, String enderecoEntrega,
-                              List<ItemPedidoRequest> itensSolicitados) {
-
-        if (!validarDadosEntrada(itensSolicitados)) {
-            return new PedidoResponse(null, false,
-                    "O pedido deve conter pelo menos um item", List.of());
-        }
-
-        if (enderecoEntrega == null || enderecoEntrega.isBlank()) {
-            return new PedidoResponse(null, false,
-                    "Endereço de entrega é obrigatório", List.of());
-        }
-
-        String erroValidacao = validarItens(itensSolicitados);
-        if (erroValidacao != null) {
-            return new PedidoResponse(null, false, erroValidacao, List.of());
-        }
-
-        try {
-            List<SolicitacaoItem> solicitacoes = converterParaSolicitacoes(itensSolicitados);
-
-            Cliente cliente = pedidoValidador.validarCliente(clienteCpf);
-            List<ItemPedido> itens = pedidoValidador.validarEConverterItens(solicitacoes);
-
-            List<ItemPedido> itensIndisponiveis = pedidoValidador.verificarEstoque(itens);
-            if (!itensIndisponiveis.isEmpty()) {
-                return new PedidoResponse(null, false,
-                        "Pedido negado por falta de ingredientes", itensIndisponiveis);
-            }
-
-            ValorPedidoDto valores = pedidoCalculador.calcularValorCompleto(itens, clienteCpf);
-
-            Pedido pedidoAprovado = pedidoService.criarEAprovarPedido(
-                    cliente, enderecoEntrega, itens, valores);
-
-            return new PedidoResponse(pedidoAprovado, true,
-                    "Pedido aprovado com sucesso! Número: " + pedidoAprovado.getId(), List.of());
-
-        } catch (RuntimeException e) {
-            return new PedidoResponse(null, false, e.getMessage(), List.of());
-        }
+    if (enderecoEntrega == null || enderecoEntrega.isBlank()) {
+      return new PedidoResponse(null, false,
+          "Endereço de entrega é obrigatório", List.of());
     }
 
-    private boolean validarDadosEntrada(List<ItemPedidoRequest> itensSolicitados) {
-        return itensSolicitados != null && !itensSolicitados.isEmpty();
+    String erroValidacao = validarItens(itensSolicitados);
+    if (erroValidacao != null) {
+      return new PedidoResponse(null, false, erroValidacao, List.of());
     }
 
-    private String validarItens(List<ItemPedidoRequest> itensSolicitados) {
-        for (ItemPedidoRequest itemRequest : itensSolicitados) {
-            if (itemRequest.getQuantidade() <= 0) {
-                return "Quantidade inválida para o produto ID " + itemRequest.getProdutoId()
-                        + ": deve ser maior que zero";
-            }
-        }
-        return null;
-    }
+    try {
+      List<SolicitacaoItem> solicitacoes = converterParaSolicitacoes(itensSolicitados);
 
-    private List<SolicitacaoItem> converterParaSolicitacoes(List<ItemPedidoRequest> itensSolicitados) {
-        List<SolicitacaoItem> solicitacoes = new ArrayList<>();
-        for (ItemPedidoRequest itemRequest : itensSolicitados) {
-            solicitacoes.add(new SolicitacaoItem(itemRequest.getProdutoId(), itemRequest.getQuantidade()));
-        }
-        return solicitacoes;
+      Cliente cliente = pedidoValidador.validarCliente(clienteCpf);
+      List<ItemPedido> itens = pedidoValidador.validarEConverterItens(solicitacoes);
+
+      List<ItemPedido> itensIndisponiveis = pedidoValidador.verificarEstoque(itens);
+      if (!itensIndisponiveis.isEmpty()) {
+        return new PedidoResponse(null, false,
+            "Pedido negado por falta de ingredientes", itensIndisponiveis);
+      }
+
+      ValorPedidoDto valores = pedidoCalculador.calcularValorCompleto(itens, clienteCpf);
+
+      Pedido pedidoAprovado = pedidoService.criarEAprovarPedido(
+          cliente, enderecoEntrega, itens, valores);
+
+      return new PedidoResponse(pedidoAprovado, true,
+          "Pedido aprovado com sucesso! Número: " + pedidoAprovado.getId(), List.of());
+
+    } catch (RuntimeException e) {
+      return new PedidoResponse(null, false, e.getMessage(), List.of());
     }
+  }
+
+  // Executa validações, orquestra chamadas de domínio e retorna resposta do pedido
+
+  private boolean validarDadosEntrada(List<ItemPedidoRequest> itensSolicitados) {
+    return itensSolicitados != null && !itensSolicitados.isEmpty();
+  }
+
+  // Valida se a lista de itens não está vazia
+
+  // Valida quantidade por item do pedido (maior que zero)
+  private String validarItens(List<ItemPedidoRequest> itensSolicitados) {
+    for (ItemPedidoRequest itemRequest : itensSolicitados) {
+      if (itemRequest.getQuantidade() <= 0) {
+        return "Quantidade inválida para o produto ID " + itemRequest.getProdutoId()
+            + ": deve ser maior que zero";
+      }
+    }
+    return null;
+  }
+
+  // Converte requests de API para objetos de solicitação do domínio
+
+  private List<SolicitacaoItem> converterParaSolicitacoes(List<ItemPedidoRequest> itensSolicitados) {
+    List<SolicitacaoItem> solicitacoes = new ArrayList<>();
+    for (ItemPedidoRequest itemRequest : itensSolicitados) {
+      solicitacoes.add(new SolicitacaoItem(itemRequest.getProdutoId(), itemRequest.getQuantidade()));
+    }
+    return solicitacoes;
+  }
 }

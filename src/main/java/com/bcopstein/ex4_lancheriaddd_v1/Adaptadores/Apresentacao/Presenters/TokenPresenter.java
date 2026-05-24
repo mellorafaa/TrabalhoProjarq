@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters;
+// Classe TokenPresenter: responsabilidade principal inferida pelo nome 
 
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.TokenResponse;
 
@@ -8,37 +9,42 @@ import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.TokenResponse;
  */
 public class TokenPresenter {
 
-    private String accessToken;
-    private String tipo;
-    private long expiresIn;
-    private String usuarioId;
-    private String usuarioEmail;
+  private String accessToken;
+  private String tipo;
+  private long expiresIn;
+  private String usuarioId;
+  private String usuarioEmail;
 
-    public TokenPresenter(TokenResponse response) {
-        this.accessToken = response.getToken();
-        this.tipo = response.getTipo();
-        this.expiresIn = response.getExpiracaoMs();
-        this.usuarioId = response.getUsuarioId();
-        this.usuarioEmail = response.getUsuarioEmail();
-    }
+  public TokenPresenter(TokenResponse response) {
+    this.accessToken = response.getToken();
+    this.tipo = response.getTipo();
+    this.expiresIn = response.getExpiracaoMs();
+    this.usuarioId = response.getUsuarioId();
+    this.usuarioEmail = response.getUsuarioEmail();
+  }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
+  // Método getAccessToken: public getAccessToken — descrição breve 
+  public String getAccessToken() {
+    return accessToken;
+  }
 
-    public String getTipo() {
-        return tipo;
-    }
+  // Método getTipo: public getTipo — descrição breve 
+  public String getTipo() {
+    return tipo;
+  }
 
-    public long getExpiresIn() {
-        return expiresIn;
-    }
+  // Método getExpiresIn: public getExpiresIn — descrição breve 
+  public long getExpiresIn() {
+    return expiresIn;
+  }
 
-    public String getUsuarioId() {
-        return usuarioId;
-    }
+  // Método getUsuarioId: public getUsuarioId — descrição breve 
+  public String getUsuarioId() {
+    return usuarioId;
+  }
 
-    public String getUsuarioEmail() {
-        return usuarioEmail;
-    }
+  // Método getUsuarioEmail: public getUsuarioEmail — descrição breve 
+  public String getUsuarioEmail() {
+    return usuarioEmail;
+  }
 }

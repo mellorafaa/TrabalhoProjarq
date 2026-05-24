@@ -1,34 +1,39 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
+// Classe DescontoService: responsabilidade principal inferida pelo nome 
 
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
 
+//Serviço de domínio que calcula descontos baseados no histórico de pedidos pagos do cliente
 @Service
 public class DescontoService implements IDescontoService {
 
-    private static final double TAXA_DESCONTO = 0.07;
+  private static final double TAXA_DESCONTO = 0.07;
 
-    private static final int MINIMO_PEDIDOS_PARA_DESCONTO = 3;
+  private static final int MINIMO_PEDIDOS_PARA_DESCONTO = 3;
 
-    private static final int DIAS_HISTORICO = 20;
+  private static final int DIAS_HISTORICO = 20;
 
-    private final PedidoRepository pedidoRepository;
+  private final PedidoRepository pedidoRepository;
 
-    public DescontoService(PedidoRepository pedidoRepository) {
-        this.pedidoRepository = pedidoRepository;
+  //Injeta o repositório de pedidos necessário para consultar o histórico do cliente
+  public DescontoService(PedidoRepository pedidoRepository) {
+    this.pedidoRepository = pedidoRepository;
+  }
+
+  //Calcula 7% de desconto se o cliente tiver 3 ou mais pedidos pagos nos últimos 20 dias
+  @Override
+  // Método calcularDesconto: public calcularDesconto — descrição breve 
+  public double calcularDesconto(double subtotal, String clienteCpf) {
+    LocalDateTime vinteDiasAtras = LocalDateTime.now().minusDays(DIAS_HISTORICO);
+
+    long pedidosPagos = pedidoRepository.contarPedidosPagosPorCliente(clienteCpf, vinteDiasAtras);
+
+    if (pedidosPagos >= MINIMO_PEDIDOS_PARA_DESCONTO) {
+      return subtotal * TAXA_DESCONTO;
     }
 
-    @Override
-    public double calcularDesconto(double subtotal, String clienteCpf) {
-        LocalDateTime vinteDiasAtras = LocalDateTime.now().minusDays(DIAS_HISTORICO);
-
-        long pedidosPagos = pedidoRepository.contarPedidosPagosPorCliente(clienteCpf, vinteDiasAtras);
-
-        if (pedidosPagos >= MINIMO_PEDIDOS_PARA_DESCONTO) {
-            return subtotal * TAXA_DESCONTO;
-        }
-
-        return 0.0;
-    }
+    return 0.0;
+  }
 }

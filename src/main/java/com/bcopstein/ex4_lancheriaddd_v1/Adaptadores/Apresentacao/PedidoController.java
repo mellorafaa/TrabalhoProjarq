@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
+// Classe PedidoController: responsabilidade principal inferida pelo nome 
 
 import java.time.LocalDate;
 import java.util.List;
@@ -34,138 +35,145 @@ import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.SubmeterPedidoUC;
 @RequestMapping("/pedidos")
 public class PedidoController {
 
-    private final SubmeterPedidoUC submeterPedidoUC;
-    private final ListarPedidosUC listarPedidosUC;
-    private final SolicitarStatusPedidoUC solicitarStatusPedidoUC;
-    private final CancelarPedidoUC cancelarPedidoUC;
-    private final PagarPedidoUC pagarPedidoUC;
-    private final ListarPedidosEntreguesUC listarPedidosEntreguesUC;
-    private final ListarPedidosClienteEntreguesUC listarPedidosClienteEntreguesUC;
-    private final ListarPedidosClienteUC listarPedidosClienteUC;
+  private final SubmeterPedidoUC submeterPedidoUC;
+  private final ListarPedidosUC listarPedidosUC;
+  private final SolicitarStatusPedidoUC solicitarStatusPedidoUC;
+  private final CancelarPedidoUC cancelarPedidoUC;
+  private final PagarPedidoUC pagarPedidoUC;
+  private final ListarPedidosEntreguesUC listarPedidosEntreguesUC;
+  private final ListarPedidosClienteEntreguesUC listarPedidosClienteEntreguesUC;
+  private final ListarPedidosClienteUC listarPedidosClienteUC;
 
-    public PedidoController(SubmeterPedidoUC submeterPedidoUC,
-                            ListarPedidosUC listarPedidosUC,
-                            SolicitarStatusPedidoUC solicitarStatusPedidoUC,
-                            CancelarPedidoUC cancelarPedidoUC,
-                            PagarPedidoUC pagarPedidoUC,
-                            ListarPedidosEntreguesUC listarPedidosEntreguesUC,
-                            ListarPedidosClienteEntreguesUC listarPedidosClienteEntreguesUC,
-                            ListarPedidosClienteUC listarPedidosClienteUC) {
-        this.submeterPedidoUC = submeterPedidoUC;
-        this.listarPedidosUC = listarPedidosUC;
-        this.solicitarStatusPedidoUC = solicitarStatusPedidoUC;
-        this.cancelarPedidoUC = cancelarPedidoUC;
-        this.pagarPedidoUC = pagarPedidoUC;
-        this.listarPedidosEntreguesUC = listarPedidosEntreguesUC;
-        this.listarPedidosClienteEntreguesUC = listarPedidosClienteEntreguesUC;
-        this.listarPedidosClienteUC = listarPedidosClienteUC;
+  public PedidoController(SubmeterPedidoUC submeterPedidoUC,
+              ListarPedidosUC listarPedidosUC,
+              SolicitarStatusPedidoUC solicitarStatusPedidoUC,
+              CancelarPedidoUC cancelarPedidoUC,
+              PagarPedidoUC pagarPedidoUC,
+              ListarPedidosEntreguesUC listarPedidosEntreguesUC,
+              ListarPedidosClienteEntreguesUC listarPedidosClienteEntreguesUC,
+              ListarPedidosClienteUC listarPedidosClienteUC) {
+    this.submeterPedidoUC = submeterPedidoUC;
+    this.listarPedidosUC = listarPedidosUC;
+    this.solicitarStatusPedidoUC = solicitarStatusPedidoUC;
+    this.cancelarPedidoUC = cancelarPedidoUC;
+    this.pagarPedidoUC = pagarPedidoUC;
+    this.listarPedidosEntreguesUC = listarPedidosEntreguesUC;
+    this.listarPedidosClienteEntreguesUC = listarPedidosClienteEntreguesUC;
+    this.listarPedidosClienteUC = listarPedidosClienteUC;
+  }
+
+  @GetMapping("/cliente/{cpf}/entregues")
+  @CrossOrigin("*")
+  public ResponseEntity<List<PedidoPresenter>> listarPedidosClienteEntregues(
+      @PathVariable String cpf,
+      @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+      @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+    List<PedidoPresenter> presenters = listarPedidosClienteEntreguesUC.run(cpf, inicio, fim)
+        .stream().map(this::montarPresenter).toList();
+    return ResponseEntity.ok(presenters);
+  }
+
+  @GetMapping("/cliente/{cpf}")
+  @CrossOrigin("*")
+  // Método listarPedidosCliente: public listarPedidosCliente — descrição breve 
+  public ResponseEntity<List<PedidoPresenter>> listarPedidosCliente(@PathVariable String cpf) {
+    List<PedidoPresenter> presenters = listarPedidosClienteUC.run(cpf)
+        .stream().map(this::montarPresenter).toList();
+    return ResponseEntity.ok(presenters);
+  }
+
+  @GetMapping("/entregues")
+  @CrossOrigin("*")
+  public ResponseEntity<List<PedidoPresenter>> listarPedidosEntregues(
+      @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+      @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+    List<PedidoPresenter> presenters = listarPedidosEntreguesUC.run(inicio, fim)
+        .stream().map(this::montarPresenter).toList();
+    return ResponseEntity.ok(presenters);
+  }
+
+  @GetMapping
+  @CrossOrigin("*")
+  // Método listarPedidos: public listarPedidos — descrição breve 
+  public ResponseEntity<List<PedidoPresenter>> listarPedidos() {
+    List<PedidoPresenter> presenters = listarPedidosUC.run()
+        .stream().map(this::montarPresenter).toList();
+    return ResponseEntity.ok(presenters);
+  }
+
+  @GetMapping("/{id}")
+  @CrossOrigin("*")
+  // Método recuperarStatusPedido: public recuperarStatusPedido — descrição breve 
+  public ResponseEntity<PedidoStatusPresenter> recuperarStatusPedido(@PathVariable long id) {
+    PedidoStatusResponse statusResponse = solicitarStatusPedidoUC.run(id);
+    if (statusResponse == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    return ResponseEntity.ok(new PedidoStatusPresenter(statusResponse.id(), statusResponse.status()));
+  }
+
+  @PostMapping
+  @CrossOrigin("*")
+  // Método submeterPedido: public submeterPedido — descrição breve 
+  public ResponseEntity<PedidoPresenter> submeterPedido(@RequestBody PedidoSubmissaoRequest request) {
+    PedidoResponse response = submeterPedidoUC.run(
+        request.getClienteCpf(),
+        request.getEnderecoEntrega(),
+        request.getItens());
+    PedidoPresenter presenter = montarPresenter(response);
+    if (response.isAprovado()) {
+      return ResponseEntity.ok(presenter);
+    }
+    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(presenter);
+  }
+
+  @PostMapping("/{id}/cancelar")
+  @CrossOrigin("*")
+  // Método cancelarPedido: public cancelarPedido — descrição breve 
+  public ResponseEntity<CancelarPedidoResponse> cancelarPedido(@PathVariable long id) {
+    CancelarPedidoResponse response = cancelarPedidoUC.run(id);
+    if (response.isCancelado()) {
+      return ResponseEntity.ok(response);
+    }
+    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
+  }
+
+  @PostMapping("/{id}/pagar")
+  @CrossOrigin("*")
+  // Método pagarPedido: public pagarPedido — descrição breve 
+  public ResponseEntity<PagarPedidoResponse> pagarPedido(@PathVariable long id) {
+    PagarPedidoResponse response = pagarPedidoUC.run(id);
+    if (response.isPago()) {
+      return ResponseEntity.ok(response);
+    }
+    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
+  }
+
+  // Método montarPresenter: private montarPresenter — descrição breve 
+  private PedidoPresenter montarPresenter(PedidoResponse response) {
+    List<PedidoPresenter.ItemPedidoPresenter> indisponiveis =
+        response.getItensIndisponiveis().stream()
+            .map(item -> new PedidoPresenter.ItemPedidoPresenter(
+                item.produtoId(), item.descricao(), item.precoUnitario(), item.quantidade()))
+            .collect(Collectors.toList());
+
+    if (!response.isAprovado() || response.getPedido() == null) {
+      return new PedidoPresenter(
+          0, "NEGADO", 0, 0, 0, 0,
+          false, response.getMensagem(), "",
+          List.of(), indisponiveis);
     }
 
-    @GetMapping("/cliente/{cpf}/entregues")
-    @CrossOrigin("*")
-    public ResponseEntity<List<PedidoPresenter>> listarPedidosClienteEntregues(
-            @PathVariable String cpf,
-            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
-            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
-        List<PedidoPresenter> presenters = listarPedidosClienteEntreguesUC.run(cpf, inicio, fim)
-                .stream().map(this::montarPresenter).toList();
-        return ResponseEntity.ok(presenters);
-    }
+    PedidoResponse.PedidoDTO dto = response.getPedido();
+    List<PedidoPresenter.ItemPedidoPresenter> itensPresenter = dto.itens().stream()
+        .map(item -> new PedidoPresenter.ItemPedidoPresenter(
+            item.produtoId(), item.descricao(), item.precoUnitario(), item.quantidade()))
+        .collect(Collectors.toList());
 
-    @GetMapping("/cliente/{cpf}")
-    @CrossOrigin("*")
-    public ResponseEntity<List<PedidoPresenter>> listarPedidosCliente(@PathVariable String cpf) {
-        List<PedidoPresenter> presenters = listarPedidosClienteUC.run(cpf)
-                .stream().map(this::montarPresenter).toList();
-        return ResponseEntity.ok(presenters);
-    }
-
-    @GetMapping("/entregues")
-    @CrossOrigin("*")
-    public ResponseEntity<List<PedidoPresenter>> listarPedidosEntregues(
-            @RequestParam("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
-            @RequestParam("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
-        List<PedidoPresenter> presenters = listarPedidosEntreguesUC.run(inicio, fim)
-                .stream().map(this::montarPresenter).toList();
-        return ResponseEntity.ok(presenters);
-    }
-
-    @GetMapping
-    @CrossOrigin("*")
-    public ResponseEntity<List<PedidoPresenter>> listarPedidos() {
-        List<PedidoPresenter> presenters = listarPedidosUC.run()
-                .stream().map(this::montarPresenter).toList();
-        return ResponseEntity.ok(presenters);
-    }
-
-    @GetMapping("/{id}")
-    @CrossOrigin("*")
-    public ResponseEntity<PedidoStatusPresenter> recuperarStatusPedido(@PathVariable long id) {
-        PedidoStatusResponse statusResponse = solicitarStatusPedidoUC.run(id);
-        if (statusResponse == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        return ResponseEntity.ok(new PedidoStatusPresenter(statusResponse.id(), statusResponse.status()));
-    }
-
-    @PostMapping
-    @CrossOrigin("*")
-    public ResponseEntity<PedidoPresenter> submeterPedido(@RequestBody PedidoSubmissaoRequest request) {
-        PedidoResponse response = submeterPedidoUC.run(
-                request.getClienteCpf(),
-                request.getEnderecoEntrega(),
-                request.getItens());
-        PedidoPresenter presenter = montarPresenter(response);
-        if (response.isAprovado()) {
-            return ResponseEntity.ok(presenter);
-        }
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(presenter);
-    }
-
-    @PostMapping("/{id}/cancelar")
-    @CrossOrigin("*")
-    public ResponseEntity<CancelarPedidoResponse> cancelarPedido(@PathVariable long id) {
-        CancelarPedidoResponse response = cancelarPedidoUC.run(id);
-        if (response.isCancelado()) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
-    }
-
-    @PostMapping("/{id}/pagar")
-    @CrossOrigin("*")
-    public ResponseEntity<PagarPedidoResponse> pagarPedido(@PathVariable long id) {
-        PagarPedidoResponse response = pagarPedidoUC.run(id);
-        if (response.isPago()) {
-            return ResponseEntity.ok(response);
-        }
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
-    }
-
-    private PedidoPresenter montarPresenter(PedidoResponse response) {
-        List<PedidoPresenter.ItemPedidoPresenter> indisponiveis =
-                response.getItensIndisponiveis().stream()
-                        .map(item -> new PedidoPresenter.ItemPedidoPresenter(
-                                item.produtoId(), item.descricao(), item.precoUnitario(), item.quantidade()))
-                        .collect(Collectors.toList());
-
-        if (!response.isAprovado() || response.getPedido() == null) {
-            return new PedidoPresenter(
-                    0, "NEGADO", 0, 0, 0, 0,
-                    false, response.getMensagem(), "",
-                    List.of(), indisponiveis);
-        }
-
-        PedidoResponse.PedidoDTO dto = response.getPedido();
-        List<PedidoPresenter.ItemPedidoPresenter> itensPresenter = dto.itens().stream()
-                .map(item -> new PedidoPresenter.ItemPedidoPresenter(
-                        item.produtoId(), item.descricao(), item.precoUnitario(), item.quantidade()))
-                .collect(Collectors.toList());
-
-        return new PedidoPresenter(
-                dto.id(), dto.status(), dto.valor(), dto.desconto(),
-                dto.impostos(), dto.valorCobrado(),
-                response.isAprovado(), response.getMensagem(),
-                dto.enderecoEntrega(), itensPresenter, List.of());
-    }
+    return new PedidoPresenter(
+        dto.id(), dto.status(), dto.valor(), dto.desconto(),
+        dto.impostos(), dto.valorCobrado(),
+        response.isAprovado(), response.getMensagem(),
+        dto.enderecoEntrega(), itensPresenter, List.of());
+  }
 }

@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
+// Classe ProdutosRepositoryJDBC: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 
@@ -12,55 +13,57 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Receita;
 
 @Component
 public class ProdutosRepositoryJDBC implements ProdutosRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final ReceitasRepository receitasRepository;
+  private final JdbcTemplate jdbcTemplate;
+  private final ReceitasRepository receitasRepository;
 
-    public ProdutosRepositoryJDBC(JdbcTemplate jdbcTemplate, ReceitasRepository receitasRepository) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.receitasRepository = receitasRepository;
-    }
+  public ProdutosRepositoryJDBC(JdbcTemplate jdbcTemplate, ReceitasRepository receitasRepository) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.receitasRepository = receitasRepository;
+  }
 
-    @Override
-    public List<Produto> recuperaProdutosCardapio(long id) {
-        String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
-                     "FROM produtos p " +
-                     "JOIN cardapio_produto cp ON p.id = cp.produto_id " +
-                     "JOIN produto_receita pr ON p.id = pr.produto_id " +
-                     "WHERE cp.cardapio_id = ?";
-        List<Produto> produtos = this.jdbcTemplate.query(
-            sql,
-            ps -> ps.setLong(1, id),
-            (rs, rowNum) -> {
-                long produtoId = rs.getLong("id");
-                String descricao = rs.getString("descricao");
-                int preco = rs.getInt("preco");
-                long receitaId = rs.getLong("receita_id");
-                Receita receita = receitasRepository.recuperaReceita(receitaId);
-                return new Produto(produtoId, descricao, receita, preco);
-            }
-        );
-        return produtos;
-    }
+  @Override
+  // Método recuperaProdutosCardapio: public recuperaProdutosCardapio — descrição breve 
+  public List<Produto> recuperaProdutosCardapio(long id) {
+    String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
+           "FROM produtos p " +
+           "JOIN cardapio_produto cp ON p.id = cp.produto_id " +
+           "JOIN produto_receita pr ON p.id = pr.produto_id " +
+           "WHERE cp.cardapio_id = ?";
+    List<Produto> produtos = this.jdbcTemplate.query(
+      sql,
+      ps -> ps.setLong(1, id),
+      (rs, rowNum) -> {
+        long produtoId = rs.getLong("id");
+        String descricao = rs.getString("descricao");
+        int preco = rs.getInt("preco");
+        long receitaId = rs.getLong("receita_id");
+        Receita receita = receitasRepository.recuperaReceita(receitaId);
+        return new Produto(produtoId, descricao, receita, preco);
+      }
+    );
+    return produtos;
+  }
 
-    @Override
-    public Produto recuperaProdutoPorId(long id) {
-        String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
-                     "FROM produtos p " +
-                     "JOIN produto_receita pr ON p.id = pr.produto_id " +
-                     "WHERE p.id = ?";
-        List<Produto> produtos = this.jdbcTemplate.query(
-            sql,
-            ps -> ps.setLong(1, id),
-            (rs, rowNum) -> {
-                long produtoId = rs.getLong("id");
-                String descricao = rs.getString("descricao");
-                int preco = rs.getInt("preco");
-                long receitaId = rs.getLong("receita_id");
-                Receita receita = receitasRepository.recuperaReceita(receitaId);
-                return new Produto(produtoId, descricao, receita, preco);
-            }
-        );
-        return produtos.isEmpty() ? null : produtos.getFirst();        
-    }
-    
+  @Override
+  // Método recuperaProdutoPorId: public recuperaProdutoPorId — descrição breve 
+  public Produto recuperaProdutoPorId(long id) {
+    String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
+           "FROM produtos p " +
+           "JOIN produto_receita pr ON p.id = pr.produto_id " +
+           "WHERE p.id = ?";
+    List<Produto> produtos = this.jdbcTemplate.query(
+      sql,
+      ps -> ps.setLong(1, id),
+      (rs, rowNum) -> {
+        long produtoId = rs.getLong("id");
+        String descricao = rs.getString("descricao");
+        int preco = rs.getInt("preco");
+        long receitaId = rs.getLong("receita_id");
+        Receita receita = receitasRepository.recuperaReceita(receitaId);
+        return new Produto(produtoId, descricao, receita, preco);
+      }
+    );
+    return produtos.isEmpty() ? null : produtos.getFirst();    
+  }
+  
 }

@@ -1,5 +1,6 @@
 
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
+// Classe ReceitasRepositoryJDBC: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -11,29 +12,30 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.ReceitasRepository;
 
 @Repository
 public class ReceitasRepositoryJDBC implements ReceitasRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final IngredientesRepository ingredientesRepository;
+  private final JdbcTemplate jdbcTemplate;
+  private final IngredientesRepository ingredientesRepository;
 
-    public ReceitasRepositoryJDBC(JdbcTemplate jdbcTemplate, IngredientesRepository ingredientesRepository) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.ingredientesRepository = ingredientesRepository;
-    }
+  public ReceitasRepositoryJDBC(JdbcTemplate jdbcTemplate, IngredientesRepository ingredientesRepository) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.ingredientesRepository = ingredientesRepository;
+  }
 
-    @Override
-    public Receita recuperaReceita(long id) {
-        String sql = "SELECT r.id, r.titulo FROM receitas r WHERE r.id = ?";
-        List<Receita> receitas = this.jdbcTemplate.query(
-            sql,
-            ps -> ps.setLong(1, id),
-            (rs, rowNum) -> {
-                long receitaId = rs.getLong("id");
-                String titulo = rs.getString("titulo");
-                List<Ingrediente> ingredientes = ingredientesRepository.recuperaIngredientesReceita(receitaId);
-                return new Receita(receitaId, titulo, ingredientes); 
-            }
-        );
-        return receitas.isEmpty() ? null : receitas.get(0);
-    }
+  @Override
+  // Método recuperaReceita: public recuperaReceita — descrição breve 
+  public Receita recuperaReceita(long id) {
+    String sql = "SELECT r.id, r.titulo FROM receitas r WHERE r.id = ?";
+    List<Receita> receitas = this.jdbcTemplate.query(
+      sql,
+      ps -> ps.setLong(1, id),
+      (rs, rowNum) -> {
+        long receitaId = rs.getLong("id");
+        String titulo = rs.getString("titulo");
+        List<Ingrediente> ingredientes = ingredientesRepository.recuperaIngredientesReceita(receitaId);
+        return new Receita(receitaId, titulo, ingredientes); 
+      }
+    );
+    return receitas.isEmpty() ? null : receitas.get(0);
+  }
 
 }
 

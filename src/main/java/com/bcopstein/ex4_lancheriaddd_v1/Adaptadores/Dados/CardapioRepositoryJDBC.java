@@ -1,4 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
+// Classe CardapioRepositoryJDBC: responsabilidade principal inferida pelo nome 
 
 import java.util.List;
 import java.util.Map;
@@ -14,46 +15,48 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;
 
 @Component
 public class CardapioRepositoryJDBC implements CardapioRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private final ProdutosRepository produtosRepository;
+  private final JdbcTemplate jdbcTemplate;
+  private final ProdutosRepository produtosRepository;
 
-    public CardapioRepositoryJDBC(JdbcTemplate jdbcTemplate, ProdutosRepository produtosRepository) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.produtosRepository = produtosRepository;
-    }
+  public CardapioRepositoryJDBC(JdbcTemplate jdbcTemplate, ProdutosRepository produtosRepository) {
+    this.jdbcTemplate = jdbcTemplate;
+    this.produtosRepository = produtosRepository;
+  }
 
-    @Override
-    public Cardapio recuperaPorId(long id) {
-        String sql = "SELECT id, titulo FROM cardapios WHERE id = ?";
-        List<Cardapio> cardapios = this.jdbcTemplate.query(
-            sql,
-            ps -> ps.setLong(1, id),
-            (rs, rowNum) -> new Cardapio(new CabecalhoCardapio(rs.getLong("id"), rs.getString("titulo")), null)
-        );
-        if (cardapios.isEmpty()) {
-            return null;
-        }
-        Cardapio cardapio = cardapios.getFirst();
-        List<Produto> produtos = produtosRepository.recuperaProdutosCardapio(id);
-        cardapio.setProdutos(produtos);
-        return cardapio;
+  @Override
+  // Método recuperaPorId: public recuperaPorId — descrição breve 
+  public Cardapio recuperaPorId(long id) {
+    String sql = "SELECT id, titulo FROM cardapios WHERE id = ?";
+    List<Cardapio> cardapios = this.jdbcTemplate.query(
+      sql,
+      ps -> ps.setLong(1, id),
+      (rs, rowNum) -> new Cardapio(new CabecalhoCardapio(rs.getLong("id"), rs.getString("titulo")), null)
+    );
+    if (cardapios.isEmpty()) {
+      return null;
     }
+    Cardapio cardapio = cardapios.getFirst();
+    List<Produto> produtos = produtosRepository.recuperaProdutosCardapio(id);
+    cardapio.setProdutos(produtos);
+    return cardapio;
+  }
 
-    @Override
-    // Por enquanto retorna sempre a pizza de queijo e presunto como indicação do "chef"
-    public List<Produto> indicacoesDoChef() {
-        return List.of(produtosRepository.recuperaProdutoPorId(2L));   
-    }
+  @Override
+  // Por enquanto retorna sempre a pizza de queijo e presunto como indicação do "chef"
+  public List<Produto> indicacoesDoChef() {
+    return List.of(produtosRepository.recuperaProdutoPorId(2L));  
+  }
 
-    @Override
-    public List<CabecalhoCardapio> cardapiosDisponiveis(){
-        String sql = "SELECT id, titulo FROM cardapios";
-        List<CabecalhoCardapio> cabCardapios = this.jdbcTemplate.query(
-            sql,
-            ps->{},
-            (rs, rowNum) -> new CabecalhoCardapio(rs.getLong("id"), rs.getString("titulo"))
-        );
-        return cabCardapios;
-    }
-    
+  @Override
+  // Método cardapiosDisponiveis: public cardapiosDisponiveis — descrição breve 
+  public List<CabecalhoCardapio> cardapiosDisponiveis(){
+    String sql = "SELECT id, titulo FROM cardapios";
+    List<CabecalhoCardapio> cabCardapios = this.jdbcTemplate.query(
+      sql,
+      ps->{},
+      (rs, rowNum) -> new CabecalhoCardapio(rs.getLong("id"), rs.getString("titulo"))
+    );
+    return cabCardapios;
+  }
+  
 }

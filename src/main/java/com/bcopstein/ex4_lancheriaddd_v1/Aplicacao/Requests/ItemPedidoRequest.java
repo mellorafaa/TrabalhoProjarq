@@ -1,21 +1,22 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests;
+// Classe ItemPedidoRequest: responsabilidade principal inferida pelo nome 
 
 public class ItemPedidoRequest {
 
-    private long produtoId;
+  private long produtoId;
 
-    private int quantidade;
+  private int quantidade;
 
-    public ItemPedidoRequest() {}
+  public ItemPedidoRequest() {}
 
-    public ItemPedidoRequest(long produtoId, int quantidade) {
-        this.produtoId = produtoId;
-        this.quantidade = quantidade;
-    }
+  public ItemPedidoRequest(long produtoId, int quantidade) {
+    this.produtoId = produtoId;
+    this.quantidade = quantidade;
+  }
 
-    public long getProdutoId()  { return produtoId; }
-    public int  getQuantidade() { return quantidade; }
+  public long getProdutoId() { return produtoId; }
+  public int getQuantidade() { return quantidade; }
 
-    public void setProdutoId(long produtoId)   { this.produtoId = produtoId; }
-    public void setQuantidade(int quantidade)  { this.quantidade = quantidade; }
+  public void setProdutoId(long produtoId)  { this.produtoId = produtoId; }
+  public void setQuantidade(int quantidade) { this.quantidade = quantidade; }
 }
