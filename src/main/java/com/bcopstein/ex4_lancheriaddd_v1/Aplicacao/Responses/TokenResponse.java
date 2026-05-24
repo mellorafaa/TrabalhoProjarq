@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe TokenResponse: responsabilidade principal inferida pelo nome 
-
 //Resposta do caso de uso de login, contendo o token JWT e informações do usuário autenticado
 public class TokenResponse {
 

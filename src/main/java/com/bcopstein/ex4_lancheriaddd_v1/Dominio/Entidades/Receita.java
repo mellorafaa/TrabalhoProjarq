@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Receita: responsabilidade principal inferida pelo nome 
-
 import java.util.List;
 
 //Representa a receita de um produto, contendo título e lista de ingredientes

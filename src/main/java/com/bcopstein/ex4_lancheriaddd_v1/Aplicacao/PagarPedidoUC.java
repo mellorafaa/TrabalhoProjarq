@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe PagarPedidoUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que processa o pagamento de um pedido aprovado e o encaminha para a cozinha
 
 import java.time.LocalDateTime;
 
@@ -26,7 +26,7 @@ public class PagarPedidoUC {
     this.cozinhaService  = cozinhaService;
   }
 
-  // Método run: public run — descrição breve 
+  // Processa o pagamento pelo ID; encaminha à cozinha se autorizado, retorna false caso contrário
   public PagarPedidoResponse run(long idPedido) {
 
     Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
@@ -71,7 +71,7 @@ public class PagarPedidoUC {
     );
   }
 
-  // Método construirMotivoRejeicao: private construirMotivoRejeicao — descrição breve 
+  // Retorna mensagem de rejeição específica para cada status que impede o pagamento
   private String construirMotivoRejeicao(Pedido.Status statusAtual) {
     return switch (statusAtual) {
       case PAGO ->

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe IGeradorToken: responsabilidade principal inferida pelo nome 
-
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Usuario;
 
 //Interface de geração de token de autenticação; define o contrato para criação de tokens JWT

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe EntregaService: responsabilidade principal inferida pelo nome 
-
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -36,7 +34,6 @@ public class EntregaService implements IEntregaService {
 
   //Recebe um pedido pronto, coloca na fila e inicia o transporte se não houver entrega em andamento
   @Override
-  // Método chegadaDePedido: public chegadaDePedido — descrição breve 
   public synchronized void chegadaDePedido(Pedido p) {
     filaTransporte.add(p);
     log.info("Pedido na fila de entrega: {}", p.getId());
@@ -56,7 +53,6 @@ public class EntregaService implements IEntregaService {
 
   //Marca o pedido em transporte como entregue e processa o próximo da fila
   @Override
-  // Método pedidoEntregue: public pedidoEntregue — descrição breve 
   public synchronized void pedidoEntregue() {
     if (emTransporte == null) {
       return;

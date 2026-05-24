@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe ListarClientesUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que retorna todos os clientes cadastrados como lista de respostas
 
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class ListarClientesUC {
     this.clienteService = clienteService;
   }
 
-  // Método run: public run — descrição breve 
+  // Busca todos os clientes e os converte em ClienteResponse
   public List<ClienteResponse> run() {
     return clienteService.listarClientes().stream()
         .map(c -> new ClienteResponse(

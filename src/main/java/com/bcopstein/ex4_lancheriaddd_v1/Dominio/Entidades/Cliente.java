@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Cliente: responsabilidade principal inferida pelo nome 
-
 //Entidade de domínio que representa um cliente da lancheria
 public class Cliente {
 

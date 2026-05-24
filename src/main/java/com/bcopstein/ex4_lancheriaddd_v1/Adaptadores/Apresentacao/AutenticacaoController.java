@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
-// Classe AutenticacaoController: responsabilidade principal inferida pelo nome 
+// Controller REST que expõe o endpoint POST /autenticacao/login para autenticação de usuários via JWT
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

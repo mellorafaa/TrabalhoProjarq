@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Seguranca;
-// Classe GeradorTokenJWT: responsabilidade principal inferida pelo nome 
+// Implementação de geração e validação de tokens JWT assinados com HMAC-SHA512
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -20,7 +20,7 @@ public class GeradorTokenJWT implements IGeradorToken {
   private long jwtExpirationMs;
   
   
-  // Método gerarToken: public gerarToken — descrição breve 
+  // Cria e assina um token JWT com os dados do usuário (id, email, nome, role) e data de expiração
   public String gerarToken(Usuario usuario) {
     SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
     
@@ -52,7 +52,7 @@ public class GeradorTokenJWT implements IGeradorToken {
   }
   
   
-  // Método isTokenValido: public isTokenValido — descrição breve 
+  // Verifica se o token JWT é válido e não está expirado
   public boolean isTokenValido(String token) {
     try {
       validarEExtrairUsuarioId(token);
@@ -62,7 +62,7 @@ public class GeradorTokenJWT implements IGeradorToken {
     }
   }
   
-  // Método getTempoExpiracaoMs: public getTempoExpiracaoMs — descrição breve 
+  // Retorna o tempo de expiração configurado para os tokens em milissegundos
   public long getTempoExpiracaoMs() {
     return jwtExpirationMs;
   }

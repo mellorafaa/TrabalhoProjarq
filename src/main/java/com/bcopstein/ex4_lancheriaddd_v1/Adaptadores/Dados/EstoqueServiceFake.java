@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe EstoqueServiceFake: responsabilidade principal inferida pelo nome 
+// Implementação fake do serviço de estoque usada no perfil dev; aprova todos os itens sem verificação real
 
 import java.util.List;
 import org.springframework.context.annotation.Profile;
@@ -12,7 +12,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.IEstoqueService;
 public class EstoqueServiceFake implements IEstoqueService {
 
   @Override
-  // Método verificarEstoque: public verificarEstoque — descrição breve 
+  // Simula verificação aprovando todos os itens (retorna lista vazia de indisponíveis)
   public List<ItemPedido> verificarEstoque(List<ItemPedido> itens) {
     return List.of();
   }

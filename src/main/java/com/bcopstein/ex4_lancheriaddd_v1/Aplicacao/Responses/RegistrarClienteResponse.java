@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe RegistrarClienteResponse: responsabilidade principal inferida pelo nome 
-
 //Resposta do caso de uso de registro de cliente, indicando sucesso ou falha com mensagem
 public class RegistrarClienteResponse {
   private final boolean sucesso;

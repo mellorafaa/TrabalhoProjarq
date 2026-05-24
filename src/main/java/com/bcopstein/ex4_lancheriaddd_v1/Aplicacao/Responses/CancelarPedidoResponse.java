@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe CancelarPedidoResponse: responsabilidade principal inferida pelo nome 
-
 //Resposta do caso de uso de cancelamento de pedido, indicando resultado e id do pedido
 public class CancelarPedidoResponse {
 

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Produto: responsabilidade principal inferida pelo nome 
-
 //Entidade de domínio que representa um produto disponível no cardápio da lancheria
 public class Produto {
 
@@ -49,7 +47,6 @@ public class Produto {
 
   //Representação textual do produto para depuração
   @Override
-  // Método toString: public toString — descrição breve 
   public String toString() {
     return "Produto [id=" + id + ", descricao=" + descricao + ", receita=" + receita + ", preco=" + preco + "]";
   }

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe IDescontoService: responsabilidade principal inferida pelo nome 
-
 //Interface do serviço de desconto; define o contrato de cálculo de desconto para pedidos
 public interface IDescontoService {
 

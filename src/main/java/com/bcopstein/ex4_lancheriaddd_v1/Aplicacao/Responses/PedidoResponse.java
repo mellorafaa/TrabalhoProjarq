@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe PedidoResponse: responsabilidade principal inferida pelo nome 
+// DTO de resposta para um pedido com status de aprovação, valores financeiros, itens e mensagem
 
 import java.util.List;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.ItemPedido;
@@ -33,7 +33,7 @@ public class PedidoResponse {
         .map(PedidoResponse::toItemDTO).toList();
   }
 
-  // Método toPedidoDTO: private toPedidoDTO — descrição breve 
+  // Converte a entidade Pedido em PedidoDTO com dados financeiros e lista de itens
   private static PedidoDTO toPedidoDTO(Pedido p) {
     List<ItemDTO> itens = p.getItens().stream()
         .map(PedidoResponse::toItemDTO).toList();
@@ -42,7 +42,7 @@ public class PedidoResponse {
         p.getImpostos(), p.getValorCobrado(), p.getEnderecoEntrega(), itens);
   }
 
-  // Método toItemDTO: private toItemDTO — descrição breve 
+  // Converte um ItemPedido em ItemDTO com produto, preço unitário e quantidade
   private static ItemDTO toItemDTO(ItemPedido item) {
     return new ItemDTO(
         item.getItem().getId(),

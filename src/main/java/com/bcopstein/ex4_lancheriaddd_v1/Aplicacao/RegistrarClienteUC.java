@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe RegistrarClienteUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que cadastra um novo cliente com senha criptografada e cria o usuário de acesso
 
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class RegistrarClienteUC {
     this.criptografiaSenhaServico = criptografiaSenhaServico;
   }
 
-  // Método run: public run — descrição breve 
+  // Registra o cliente e o usuário de acesso; retorna false com mensagem se os dados forem inválidos
   public RegistrarClienteResponse run(RegistrarClienteRequest request) {
     if (request == null) {
       return new RegistrarClienteResponse(false, "Dados de cadastro não informados.");

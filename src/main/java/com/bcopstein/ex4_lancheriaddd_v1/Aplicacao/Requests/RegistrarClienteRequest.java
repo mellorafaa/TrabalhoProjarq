@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests;
-// Classe RegistrarClienteRequest: responsabilidade principal inferida pelo nome 
+// DTO de requisição para cadastro de cliente com dados pessoais (CPF, nome, celular, endereço, e-mail e senha)
 
 public class RegistrarClienteRequest {
   private String cpf;

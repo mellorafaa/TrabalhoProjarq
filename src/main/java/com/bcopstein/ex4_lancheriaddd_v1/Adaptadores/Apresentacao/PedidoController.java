@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
-// Classe PedidoController: responsabilidade principal inferida pelo nome 
+// Controller REST que gerencia o ciclo de vida dos pedidos via endpoints em /pedidos
 
 import java.time.LocalDate;
 import java.util.List;
@@ -75,7 +75,7 @@ public class PedidoController {
 
   @GetMapping("/cliente/{cpf}")
   @CrossOrigin("*")
-  // Método listarPedidosCliente: public listarPedidosCliente — descrição breve 
+  // Retorna todos os pedidos de um cliente específico pelo CPF
   public ResponseEntity<List<PedidoPresenter>> listarPedidosCliente(@PathVariable String cpf) {
     List<PedidoPresenter> presenters = listarPedidosClienteUC.run(cpf)
         .stream().map(this::montarPresenter).toList();
@@ -94,7 +94,7 @@ public class PedidoController {
 
   @GetMapping
   @CrossOrigin("*")
-  // Método listarPedidos: public listarPedidos — descrição breve 
+  // Retorna a lista de todos os pedidos cadastrados no sistema
   public ResponseEntity<List<PedidoPresenter>> listarPedidos() {
     List<PedidoPresenter> presenters = listarPedidosUC.run()
         .stream().map(this::montarPresenter).toList();
@@ -103,7 +103,7 @@ public class PedidoController {
 
   @GetMapping("/{id}")
   @CrossOrigin("*")
-  // Método recuperarStatusPedido: public recuperarStatusPedido — descrição breve 
+  // Retorna o ID e o status atual de um pedido; responde 404 se o pedido não for encontrado
   public ResponseEntity<PedidoStatusPresenter> recuperarStatusPedido(@PathVariable long id) {
     PedidoStatusResponse statusResponse = solicitarStatusPedidoUC.run(id);
     if (statusResponse == null) {
@@ -114,7 +114,7 @@ public class PedidoController {
 
   @PostMapping
   @CrossOrigin("*")
-  // Método submeterPedido: public submeterPedido — descrição breve 
+  // Valida e submete um novo pedido; retorna 422 se negado por falta de estoque ou dados inválidos
   public ResponseEntity<PedidoPresenter> submeterPedido(@RequestBody PedidoSubmissaoRequest request) {
     PedidoResponse response = submeterPedidoUC.run(
         request.getClienteCpf(),
@@ -129,7 +129,7 @@ public class PedidoController {
 
   @PostMapping("/{id}/cancelar")
   @CrossOrigin("*")
-  // Método cancelarPedido: public cancelarPedido — descrição breve 
+  // Cancela um pedido aprovado; retorna 422 se o status atual não permitir cancelamento
   public ResponseEntity<CancelarPedidoResponse> cancelarPedido(@PathVariable long id) {
     CancelarPedidoResponse response = cancelarPedidoUC.run(id);
     if (response.isCancelado()) {
@@ -140,7 +140,7 @@ public class PedidoController {
 
   @PostMapping("/{id}/pagar")
   @CrossOrigin("*")
-  // Método pagarPedido: public pagarPedido — descrição breve 
+  // Processa o pagamento de um pedido aprovado e encaminha à cozinha; retorna 422 se não for possível
   public ResponseEntity<PagarPedidoResponse> pagarPedido(@PathVariable long id) {
     PagarPedidoResponse response = pagarPedidoUC.run(id);
     if (response.isPago()) {
@@ -149,7 +149,7 @@ public class PedidoController {
     return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
   }
 
-  // Método montarPresenter: private montarPresenter — descrição breve 
+  // Monta o PedidoPresenter a partir do response, tratando pedidos negados e itens indisponíveis
   private PedidoPresenter montarPresenter(PedidoResponse response) {
     List<PedidoPresenter.ItemPedidoPresenter> indisponiveis =
         response.getItensIndisponiveis().stream()

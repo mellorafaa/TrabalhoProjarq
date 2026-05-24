@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters;
-// Classe ClientePresenter: responsabilidade principal inferida pelo nome 
+// Presenter com os dados cadastrais de um cliente para serialização na resposta HTTP
 
 public class ClientePresenter {
   private final String cpf;

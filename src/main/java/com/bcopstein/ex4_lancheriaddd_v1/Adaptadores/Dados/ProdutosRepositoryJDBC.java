@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe ProdutosRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de produtos; consulta produtos e suas receitas no banco de dados
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class ProdutosRepositoryJDBC implements ProdutosRepository {
   }
 
   @Override
-  // Método recuperaProdutosCardapio: public recuperaProdutosCardapio — descrição breve 
+  // Busca os produtos de um cardápio pelo ID, carregando a receita de cada produto
   public List<Produto> recuperaProdutosCardapio(long id) {
     String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
            "FROM produtos p " +
@@ -45,7 +45,7 @@ public class ProdutosRepositoryJDBC implements ProdutosRepository {
   }
 
   @Override
-  // Método recuperaProdutoPorId: public recuperaProdutoPorId — descrição breve 
+  // Busca um produto pelo ID, incluindo sua receita; retorna null se não encontrado
   public Produto recuperaProdutoPorId(long id) {
     String sql = "SELECT p.id, p.descricao, p.preco, pr.receita_id " +
            "FROM produtos p " +

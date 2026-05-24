@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados;
-// Classe UsuarioRepository: responsabilidade principal inferida pelo nome 
-
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Usuario;
 
 //Interface de repositório de usuários; define operações de acesso a dados de usuário do sistema

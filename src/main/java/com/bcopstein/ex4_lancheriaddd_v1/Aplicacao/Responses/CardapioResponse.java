@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe CardapioResponse: responsabilidade principal inferida pelo nome 
+// DTO de resposta com dados completos do cardápio: título, produtos e IDs das sugestões do chef
 
 import java.util.List;
 import java.util.Set;

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe FazerLoginUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que autentica o usuário pelo e-mail e senha e retorna um token JWT de acesso
 
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests.LoginRequest;
@@ -19,21 +19,17 @@ public class FazerLoginUC {
   }
   
   
-  // Método executar: public executar — descrição breve 
+  // Autentica o usuário e monta a resposta com o token JWT, tipo e dados do usuário
   public TokenResponse executar(LoginRequest request) {
-    // Validar entrada
     if (request == null || request.getEmail() == null || request.getSenha() == null) {
       throw new IllegalArgumentException("Email e senha são obrigatórios");
     }
-    
-    // Autenticar usuário
+
     Usuario usuario = autenticacaoServico.autenticar(request.getEmail(), request.getSenha());
-    
-    // Gerar token
+
     String token = geradorToken.gerarToken(usuario);
     long expiracaoMs = geradorToken.getTempoExpiracaoMs();
-    
-    // Retornar response
+
     return new TokenResponse(
       token,
       "Bearer",

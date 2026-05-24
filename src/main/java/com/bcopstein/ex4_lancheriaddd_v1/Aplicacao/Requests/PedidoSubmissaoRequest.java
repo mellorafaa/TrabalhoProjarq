@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests;
-// Classe PedidoSubmissaoRequest: responsabilidade principal inferida pelo nome 
+// DTO de requisição para submissão de pedido, com CPF do cliente, endereço de entrega e lista de itens
 
 import java.util.List;
 

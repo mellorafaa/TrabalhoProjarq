@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe IngredientesRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de ingredientes; consulta a tabela ingredientes no banco de dados
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class IngredientesRepositoryJDBC implements IngredientesRepository {
   }
 
   @Override
-  // Método recuperaTodos: public recuperaTodos — descrição breve 
+  // Busca todos os ingredientes cadastrados na tabela ingredientes
   public List<Ingrediente> recuperaTodos() {
     String sql = "SELECT id, descricao FROM ingredientes";
     List<Ingrediente> ingredientes = this.jdbcTemplate.query(
@@ -30,7 +30,7 @@ public class IngredientesRepositoryJDBC implements IngredientesRepository {
   }
 
   @Override
-  // Método recuperaIngredientesReceita: public recuperaIngredientesReceita — descrição breve 
+  // Busca os ingredientes vinculados a uma receita pelo ID via JOIN com receita_ingrediente
   public List<Ingrediente> recuperaIngredientesReceita(long id) {
     String sql = "SELECT i.id, i.descricao FROM ingredientes i " +
         "JOIN receita_ingrediente ri ON i.id = ri.ingrediente_id " +

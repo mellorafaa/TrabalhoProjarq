@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe ClienteRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de clientes; persiste e consulta registros na tabela clientes
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class ClienteRepositoryJDBC implements ClienteRepository {
   }
 
   @Override
-  // Método recuperarPorCpf: public recuperarPorCpf — descrição breve 
+  // Busca um cliente pelo CPF na tabela clientes; retorna null se não encontrado
   public Cliente recuperarPorCpf(String cpf) {
     String sql = "SELECT cpf, nome, celular, endereco, email, senha FROM clientes WHERE cpf = ?";
 
@@ -40,7 +40,7 @@ public class ClienteRepositoryJDBC implements ClienteRepository {
   }
 
   @Override
-  // Método recuperarPorEmail: public recuperarPorEmail — descrição breve 
+  // Busca um cliente pelo e-mail na tabela clientes; retorna null se não encontrado
   public Cliente recuperarPorEmail(String email) {
     String sql = "SELECT cpf, nome, celular, endereco, email, senha FROM clientes WHERE email = ?";
 
@@ -61,7 +61,7 @@ public class ClienteRepositoryJDBC implements ClienteRepository {
   }
 
   @Override
-  // Método recuperarTodos: public recuperarTodos — descrição breve 
+  // Retorna todos os clientes cadastrados na tabela clientes
   public List<Cliente> recuperarTodos() {
     String sql = "SELECT cpf, nome, celular, endereco, email, senha FROM clientes";
 
@@ -79,7 +79,7 @@ public class ClienteRepositoryJDBC implements ClienteRepository {
   }
 
   @Override
-  // Método salvar: public salvar — descrição breve 
+  // Insere um novo cliente na tabela clientes e retorna o objeto persistido
   public Cliente salvar(Cliente cliente) {
     String sql = "INSERT INTO clientes (cpf, nome, celular, endereco, email, senha) VALUES (?, ?, ?, ?, ?, ?)";
     jdbcTemplate.update(

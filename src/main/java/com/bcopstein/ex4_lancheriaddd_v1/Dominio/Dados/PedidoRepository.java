@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados;
-// Classe PedidoRepository: responsabilidade principal inferida pelo nome 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;

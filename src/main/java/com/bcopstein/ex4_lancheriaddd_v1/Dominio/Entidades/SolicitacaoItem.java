@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe SolicitacaoItem: responsabilidade principal inferida pelo nome 
-
 //Representa a solicitação de um item (produto + quantidade) feita pelo cliente ao submeter pedido
 public class SolicitacaoItem {
 

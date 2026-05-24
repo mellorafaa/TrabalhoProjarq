@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Usuario: responsabilidade principal inferida pelo nome 
-
 //Entidade de domínio que representa um usuário do sistema para fins de autenticação
 public class Usuario {
 

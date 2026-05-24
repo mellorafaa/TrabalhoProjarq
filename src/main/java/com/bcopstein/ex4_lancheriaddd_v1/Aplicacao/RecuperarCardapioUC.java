@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe RecuperarCardapioUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que retorna um cardápio completo com seus produtos e as indicações do chef
 
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -17,14 +17,14 @@ public class RecuperarCardapioUC {
     this.cardapioService = cardapioService;
   }
 
-  // Método run: public run — descrição breve 
+  // Busca o cardápio pelo ID e as sugestões do chef, retornando a resposta completa
   public CardapioResponse run(long idCardapio) {
     Cardapio cardapio = cardapioService.recuperaCardapio(idCardapio);
     List<Produto> sugestoes = cardapioService.recuperaSugestoesDoChef();
     return new CardapioResponse(cardapio, sugestoes);
   }
 
-  // Método run: public run — descrição breve 
+  // Busca o cardápio padrão (sem ID) e as sugestões do chef, retornando a resposta completa
   public CardapioResponse run() {
     Cardapio cardapio = cardapioService.recuperaCardapioSemId();
     List<Produto> sugestoes = cardapioService.recuperaSugestoesDoChef();

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe SolicitarStatusPedidoUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que consulta e retorna o ID e o status atual de um pedido pelo ID
 
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoStatusResponse;
@@ -15,7 +15,7 @@ public class SolicitarStatusPedidoUC {
     this.pedidoRepository = pedidoRepository;
   }
 
-  // Método run: public run — descrição breve 
+  // Busca o pedido pelo ID e retorna id e status; retorna null se não encontrado
   public PedidoStatusResponse run(long pedidoId) {
     Pedido pedido = pedidoRepository.recuperarPorId(pedidoId);
     if (pedido == null) return null;

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
-// Classe ClienteController: responsabilidade principal inferida pelo nome 
+// Controller REST que expõe endpoints GET e POST /clientes para listagem e cadastro de clientes
 
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,7 +28,7 @@ public class ClienteController {
 
   @GetMapping
   @CrossOrigin("*")
-  // Método listarClientes: public listarClientes — descrição breve 
+  // Retorna a lista de todos os clientes cadastrados no sistema
   public List<ClientePresenter> listarClientes() {
     return listarClientesUC.run().stream()
         .map(r -> new ClientePresenter(r.cpf(), r.nome(), r.celular(), r.endereco(), r.email()))
@@ -37,7 +37,7 @@ public class ClienteController {
 
   @PostMapping
   @CrossOrigin("*")
-  // Método registrarCliente: public registrarCliente — descrição breve 
+  // Recebe os dados e cadastra um novo cliente, retornando resultado de sucesso ou mensagem de erro
   public RegistrarClienteResponse registrarCliente(@RequestBody RegistrarClienteRequest request) {
     return registrarClienteUC.run(request);
   }

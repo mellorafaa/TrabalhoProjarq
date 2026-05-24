@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1;
-// Classe Ex4LancheriadddV1Application: responsabilidade principal inferida pelo nome 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;

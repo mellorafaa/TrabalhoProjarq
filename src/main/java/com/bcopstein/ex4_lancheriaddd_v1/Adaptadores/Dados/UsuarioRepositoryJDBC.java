@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe UsuarioRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de usuários; persiste e consulta registros na tabela usuarios
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +19,7 @@ public class UsuarioRepositoryJDBC implements UsuarioRepository {
   }
 
   @Override
-  // Método recuperarPorEmail: public recuperarPorEmail — descrição breve 
+  // Busca um usuário pelo e-mail na tabela usuarios; retorna null se não encontrado
   public Usuario recuperarPorEmail(String email) {
     String sql = "SELECT id, email, senha_hash, nome, role, ativo FROM usuarios WHERE email = ?";
     List<Usuario> usuarios = jdbcTemplate.query(sql, usuarioRowMapper(), email);
@@ -27,7 +27,7 @@ public class UsuarioRepositoryJDBC implements UsuarioRepository {
   }
 
   @Override
-  // Método recuperarPorId: public recuperarPorId — descrição breve 
+  // Busca um usuário pelo ID na tabela usuarios; retorna null se não encontrado
   public Usuario recuperarPorId(String id) {
     String sql = "SELECT id, email, senha_hash, nome, role, ativo FROM usuarios WHERE id = ?";
     List<Usuario> usuarios = jdbcTemplate.query(sql, usuarioRowMapper(), id);
@@ -35,7 +35,7 @@ public class UsuarioRepositoryJDBC implements UsuarioRepository {
   }
 
   @Override
-  // Método salvar: public salvar — descrição breve 
+  // Gera um UUID, insere o usuário no banco e retorna o objeto salvo com ID gerado
   public Usuario salvar(Usuario usuario) {
     String sql = "INSERT INTO usuarios (id, email, senha_hash, nome, role, ativo) VALUES (?, ?, ?, ?, ?, ?)";
     String id = UUID.randomUUID().toString();
@@ -50,7 +50,7 @@ public class UsuarioRepositoryJDBC implements UsuarioRepository {
     return recuperarPorId(id);
   }
 
-  // Método usuarioRowMapper: private usuarioRowMapper — descrição breve 
+  // Cria o mapeador de linha SQL para converter ResultSet em objeto Usuario
   private RowMapper<Usuario> usuarioRowMapper() {
     return (rs, rowNum) -> new Usuario(
         rs.getString("id"),

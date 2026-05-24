@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe CozinhaService: responsabilidade principal inferida pelo nome 
-
 import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -38,7 +36,6 @@ public class CozinhaService implements ICozinhaService {
 
   //Recebe um pedido pago, coloca na fila e inicia o preparo se a cozinha estiver livre
   @Override
-  // Método chegadaDePedido: public chegadaDePedido — descrição breve 
   public synchronized void chegadaDePedido(Pedido p) {
     p.iniciarPreparo();
     pedidoRepository.atualizarStatus(p.getId(), Pedido.Status.AGUARDANDO);
@@ -60,7 +57,6 @@ public class CozinhaService implements ICozinhaService {
 
   //Marca o pedido em preparo como pronto e o encaminha para entrega; inicia o próximo da fila
   @Override
-  // Método pedidoPronto: public pedidoPronto — descrição breve 
   public synchronized void pedidoPronto() {
     if (emPreparacao == null) {
       return;

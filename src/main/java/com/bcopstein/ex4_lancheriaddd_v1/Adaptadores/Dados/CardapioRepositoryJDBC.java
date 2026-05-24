@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe CardapioRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de cardápios; consulta cardápios e produtos no banco de dados
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ public class CardapioRepositoryJDBC implements CardapioRepository {
   }
 
   @Override
-  // Método recuperaPorId: public recuperaPorId — descrição breve 
+  // Busca um cardápio pelo ID, carregando os produtos associados
   public Cardapio recuperaPorId(long id) {
     String sql = "SELECT id, titulo FROM cardapios WHERE id = ?";
     List<Cardapio> cardapios = this.jdbcTemplate.query(
@@ -42,13 +42,13 @@ public class CardapioRepositoryJDBC implements CardapioRepository {
   }
 
   @Override
-  // Por enquanto retorna sempre a pizza de queijo e presunto como indicação do "chef"
+  // Retorna os produtos indicados pelo chef (atualmente fixo: produto de ID 2)
   public List<Produto> indicacoesDoChef() {
     return List.of(produtosRepository.recuperaProdutoPorId(2L));  
   }
 
   @Override
-  // Método cardapiosDisponiveis: public cardapiosDisponiveis — descrição breve 
+  // Retorna os cabeçalhos de todos os cardápios cadastrados na tabela cardapios
   public List<CabecalhoCardapio> cardapiosDisponiveis(){
     String sql = "SELECT id, titulo FROM cardapios";
     List<CabecalhoCardapio> cabCardapios = this.jdbcTemplate.query(

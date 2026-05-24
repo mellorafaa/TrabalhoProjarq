@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Ingrediente: responsabilidade principal inferida pelo nome 
-
 //Representa um ingrediente utilizado nas receitas dos produtos da lancheria
 public class Ingrediente {
 

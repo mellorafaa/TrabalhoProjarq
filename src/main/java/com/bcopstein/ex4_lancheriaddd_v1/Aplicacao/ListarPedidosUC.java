@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe ListarPedidosUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que retorna todos os pedidos cadastrados como lista de respostas
 
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -15,7 +15,7 @@ public class ListarPedidosUC {
     this.pedidoRepository = pedidoRepository;
   }
 
-  // Método run: public run — descrição breve 
+  // Busca todos os pedidos e os encapsula em PedidoResponse com status aprovado
   public List<PedidoResponse> run() {
     return pedidoRepository.listarTodos().stream()
         .map(p -> new PedidoResponse(p, true, "OK", List.of()))

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe ListarPedidosClienteEntreguesUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que retorna os pedidos entregues de um cliente em um intervalo de datas
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,7 +16,7 @@ public class ListarPedidosClienteEntreguesUC {
     this.pedidoRepository = pedidoRepository;
   }
 
-  // Método run: public run — descrição breve 
+  // Busca pedidos com status ENTREGUE do cliente no período informado
   public List<PedidoResponse> run(String cpf, LocalDate inicio, LocalDate fim) {
     return pedidoRepository.listarEntreguesEntreDatasParaCliente(cpf, inicio, fim).stream()
         .map(p -> new PedidoResponse(p, true, "OK", List.of()))

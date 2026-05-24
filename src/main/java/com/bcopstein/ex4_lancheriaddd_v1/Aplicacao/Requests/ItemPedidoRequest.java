@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Requests;
-// Classe ItemPedidoRequest: responsabilidade principal inferida pelo nome 
+// DTO de requisição para um item do pedido, contendo ID do produto e quantidade solicitada
 
 public class ItemPedidoRequest {
 

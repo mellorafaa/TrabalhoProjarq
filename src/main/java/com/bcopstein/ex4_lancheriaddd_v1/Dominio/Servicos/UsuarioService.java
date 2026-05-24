@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe UsuarioService: responsabilidade principal inferida pelo nome 
-
 import org.springframework.stereotype.Service;
 
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.UsuarioRepository;

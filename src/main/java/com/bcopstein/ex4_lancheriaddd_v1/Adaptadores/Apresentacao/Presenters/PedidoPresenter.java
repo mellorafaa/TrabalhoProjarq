@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Presenters;
-// Classe PedidoPresenter: responsabilidade principal inferida pelo nome 
+// Presenter com todos os dados de um pedido (status, valores financeiros, itens e endereço) para a resposta HTTP
 
 import java.util.List;
 

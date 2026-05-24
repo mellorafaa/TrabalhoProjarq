@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe RecuperaListaCardapiosUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que retorna a lista de cabeçalhos (id e título) dos cardápios disponíveis
 
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CabecalhoCardapioResponse;
@@ -14,7 +14,7 @@ public class RecuperaListaCardapiosUC {
     this.cardapioService = cardapioService;
   }
 
-  // Método run: public run — descrição breve 
+  // Recupera e converte os cabeçalhos dos cardápios em CabecalhoCardapioResponse
   public CabecalhoCardapioResponse run() {
     return new CabecalhoCardapioResponse(
         cardapioService.recuperaListaDeCardapios().stream()

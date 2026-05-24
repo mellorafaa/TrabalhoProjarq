@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados;
-// Classe ProdutosRepository: responsabilidade principal inferida pelo nome 
-
 import java.util.List;
 
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Produto;

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao;
-// Classe CardapioController: responsabilidade principal inferida pelo nome 
+// Controller REST que expõe endpoints GET /cardapio para consulta de cardápios e seus produtos
 
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,7 +34,7 @@ public class CardapioController {
 
   @GetMapping("/lista")
   @CrossOrigin("*")
-  // Método recuperaListaCardapios: public recuperaListaCardapios — descrição breve 
+  // Retorna a lista de cabeçalhos (id e título) de todos os cardápios disponíveis
   public List<CabecalhoCardapioPresenter> recuperaListaCardapios() {
     return recuperaListaCardapioUC.run().cabecalhos().stream()
         .map(c -> new CabecalhoCardapioPresenter(c.id(), c.titulo()))
@@ -43,12 +43,12 @@ public class CardapioController {
 
   @GetMapping("")
   @CrossOrigin("*")
-  // Método recuperaCardapioSemId: public recuperaCardapioSemId — descrição breve 
+  // Retorna o cardápio padrão (ID 1) quando nenhum ID é informado na URL
   public CardapioPresenter recuperaCardapioSemId() {
     return toPresenter(recuperaCardapioUC.run());
   }
 
-  // Método toPresenter: private toPresenter — descrição breve 
+  // Converte o CardapioResponse em CardapioPresenter, marcando os produtos indicados pelo chef
   private CardapioPresenter toPresenter(CardapioResponse response) {
     CardapioPresenter presenter = new CardapioPresenter(response.getTitulo());
     for (CardapioResponse.ItemCardapioDTO item : response.getProdutos()) {

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe Cardapio: responsabilidade principal inferida pelo nome 
-
 import java.util.List;
 
 //Representa um cardápio da lancheria, composto por um cabeçalho e lista de produtos

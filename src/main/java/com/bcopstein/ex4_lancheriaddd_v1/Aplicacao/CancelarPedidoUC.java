@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe CancelarPedidoUC: responsabilidade principal inferida pelo nome 
+// Caso de uso que cancela um pedido aprovado; rejeita se o status atual não permitir cancelamento
 
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class CancelarPedidoUC {
     this.pedidoRepository = pedidoRepository;
   }
 
-  // Método run: public run — descrição breve 
+  // Tenta cancelar o pedido pelo ID; retorna false com motivo se o cancelamento não for permitido
   public CancelarPedidoResponse run(long idPedido) {
 
     Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
@@ -46,7 +46,7 @@ public class CancelarPedidoUC {
     );
   }
 
-  // Método construirMotivoRejeicao: private construirMotivoRejeicao — descrição breve 
+  // Retorna mensagem de rejeição específica para cada status que impede o cancelamento
   private String construirMotivoRejeicao(Pedido.Status statusAtual) {
     return switch (statusAtual) {
       case PAGO ->

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe ItemEstoque: responsabilidade principal inferida pelo nome 
-
 //Representa um item do estoque, associando um ingrediente à sua quantidade disponível
 public class ItemEstoque {
   private Ingrediente ingrediente;

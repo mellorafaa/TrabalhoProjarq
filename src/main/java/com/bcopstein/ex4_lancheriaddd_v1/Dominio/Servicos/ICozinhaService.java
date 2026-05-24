@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe ICozinhaService: responsabilidade principal inferida pelo nome 
-
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 
 //Interface do serviço de cozinha; define operações do fluxo de preparo dos pedidos

@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
-// Classe DescontoService: responsabilidade principal inferida pelo nome 
-
 import java.time.LocalDateTime;
 import org.springframework.stereotype.Service;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
@@ -24,7 +22,6 @@ public class DescontoService implements IDescontoService {
 
   //Calcula 7% de desconto se o cliente tiver 3 ou mais pedidos pagos nos últimos 20 dias
   @Override
-  // Método calcularDesconto: public calcularDesconto — descrição breve 
   public double calcularDesconto(double subtotal, String clienteCpf) {
     LocalDateTime vinteDiasAtras = LocalDateTime.now().minusDays(DIAS_HISTORICO);
 

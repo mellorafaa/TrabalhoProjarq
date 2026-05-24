@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses;
-// Classe PagarPedidoResponse: responsabilidade principal inferida pelo nome 
-
 //Resposta do caso de uso de pagamento de pedido, com status, mensagem e id do pedido
 public class PagarPedidoResponse {
 

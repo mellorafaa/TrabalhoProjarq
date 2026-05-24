@@ -1,6 +1,4 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades;
-// Classe ItemPedido: responsabilidade principal inferida pelo nome 
-
 //Representa um item dentro de um pedido, associando produto e quantidade solicitada
 public class ItemPedido {
 

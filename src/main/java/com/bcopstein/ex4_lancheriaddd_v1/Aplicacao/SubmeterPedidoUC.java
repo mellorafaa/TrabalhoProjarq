@@ -1,7 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
-// Classe SubmeterPedidoUC: responsabilidade principal inferida pelo nome 
-
-// Caso de uso: Submeter pedido — valida entrada, verifica estoque, calcula valores e cria o pedido
+// Caso de uso que valida entrada, verifica estoque, calcula valores e submete um pedido ao sistema
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +30,6 @@ public class SubmeterPedidoUC {
     this.pedidoCalculador = pedidoCalculador;
     this.pedidoService  = pedidoService;
   }
-
-  // Construtor: injeta dependências do caso de uso
 
   public PedidoResponse run(String clienteCpf, String enderecoEntrega,
                List<ItemPedidoRequest> itensSolicitados) {
@@ -78,15 +74,11 @@ public class SubmeterPedidoUC {
     }
   }
 
-  // Executa validações, orquestra chamadas de domínio e retorna resposta do pedido
-
   private boolean validarDadosEntrada(List<ItemPedidoRequest> itensSolicitados) {
     return itensSolicitados != null && !itensSolicitados.isEmpty();
   }
 
-  // Valida se a lista de itens não está vazia
-
-  // Valida quantidade por item do pedido (maior que zero)
+  // Valida que cada item tem quantidade maior que zero
   private String validarItens(List<ItemPedidoRequest> itensSolicitados) {
     for (ItemPedidoRequest itemRequest : itensSolicitados) {
       if (itemRequest.getQuantidade() <= 0) {
@@ -97,8 +89,7 @@ public class SubmeterPedidoUC {
     return null;
   }
 
-  // Converte requests de API para objetos de solicitação do domínio
-
+  // Converte os ItemPedidoRequest da API em SolicitacaoItem do domínio
   private List<SolicitacaoItem> converterParaSolicitacoes(List<ItemPedidoRequest> itensSolicitados) {
     List<SolicitacaoItem> solicitacoes = new ArrayList<>();
     for (ItemPedidoRequest itemRequest : itensSolicitados) {

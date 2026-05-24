@@ -1,6 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1;
-// Classe WebConfig: responsabilidade principal inferida pelo nome 
-
+//Configuração MVC que registra o JWTFilter como interceptor em todas as rotas, exceto as públicas
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -15,8 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
     this.jwtFilter = jwtFilter;
   }
   
+  //Registra o JWTFilter para interceptar todas as rotas, liberando login, h2, health e cadastro
   @Override
-  // Método addInterceptors: public addInterceptors — descrição breve 
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(jwtFilter)
       .addPathPatterns("/**")

@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe PedidoRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de pedidos; persiste e consulta pedidos e seus itens no banco
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -38,7 +38,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método salvar: public salvar — descrição breve 
+  // Insere o pedido e seus itens no banco, retornando o pedido com o ID gerado
   public Pedido salvar(Pedido pedido) {
 
     String sqlPedido =
@@ -80,7 +80,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método recuperarPorId: public recuperarPorId — descrição breve 
+  // Busca um pedido completo (com itens) pelo ID; retorna null se não encontrado
   public Pedido recuperarPorId(long id) {
     String sqlPedido =
       "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +
@@ -132,7 +132,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
     );
   }
 
-  // Método recuperarItensDoPedido: private recuperarItensDoPedido — descrição breve 
+  // Carrega os itens de um pedido a partir da tabela itens_pedido
   private List<ItemPedido> recuperarItensDoPedido(long pedidoId) {
     String sql = "SELECT produto_id, quantidade FROM itens_pedido WHERE pedido_id = ?";
 
@@ -148,7 +148,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método listarTodos: public listarTodos — descrição breve 
+  // Retorna todos os pedidos com seus itens carregados
   public List<Pedido> listarTodos() {
     String sql =
       "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +
@@ -188,7 +188,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método listarEntreguesEntreDatas: public listarEntreguesEntreDatas — descrição breve 
+  // Retorna pedidos com status ENTREGUE cuja data de criação esteja no intervalo informado
   public List<Pedido> listarEntreguesEntreDatas(LocalDate inicio, LocalDate fim) {
     String sql =
       "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +
@@ -233,7 +233,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método listarEntreguesEntreDatasParaCliente: public listarEntreguesEntreDatasParaCliente — descrição breve 
+  // Retorna pedidos entregues de um cliente específico dentro do intervalo de datas informado
   public List<Pedido> listarEntreguesEntreDatasParaCliente(String cpf, LocalDate inicio, LocalDate fim) {
     String sql =
       "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +
@@ -280,7 +280,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método contarPedidosRecentesPorCliente: public contarPedidosRecentesPorCliente — descrição breve 
+  // Conta os pedidos feitos pelo cliente a partir de uma data/hora informada
   public long contarPedidosRecentesPorCliente(String clienteCpf, LocalDateTime desde) {
     String sql =
       "SELECT COUNT(*) FROM pedidos " +
@@ -293,7 +293,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método contarPedidosPagosPorCliente: public contarPedidosPagosPorCliente — descrição breve 
+  // Conta os pedidos pagos pelo cliente a partir de uma data/hora informada
   public long contarPedidosPagosPorCliente(String clienteCpf, LocalDateTime desde) {
     String sql =
       "SELECT COUNT(*) FROM pedidos " +
@@ -308,7 +308,7 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método listarPorClienteCpf: public listarPorClienteCpf — descrição breve 
+  // Retorna todos os pedidos de um cliente identificado pelo CPF
   public List<Pedido> listarPorClienteCpf(String cpf) {
     String sql =
       "SELECT id, cliente_cpf, status, valor, impostos, desconto, " +
@@ -351,14 +351,14 @@ public class PedidoRepositoryJDBC implements PedidoRepository {
   }
 
   @Override
-  // Método atualizarStatus: public atualizarStatus — descrição breve 
+  // Atualiza o campo status de um pedido no banco de dados
   public void atualizarStatus(long id, Pedido.Status novoStatus) {
     String sql = "UPDATE pedidos SET status = ? WHERE id = ?";
     jdbcTemplate.update(sql, novoStatus.name(), id);
   }
 
   @Override
-  // Método registrarPagamento: public registrarPagamento — descrição breve 
+  // Define o status como PAGO e registra a data/hora do pagamento no banco
   public void registrarPagamento(long id, LocalDateTime dataHoraPagamento) {
     String sql = "UPDATE pedidos SET status = ?, data_hora_pagamento = ? WHERE id = ?";
     jdbcTemplate.update(

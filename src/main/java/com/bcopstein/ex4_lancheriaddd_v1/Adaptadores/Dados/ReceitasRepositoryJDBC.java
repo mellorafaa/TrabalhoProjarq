@@ -1,6 +1,6 @@
 
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Dados;
-// Classe ReceitasRepositoryJDBC: responsabilidade principal inferida pelo nome 
+// Implementação JDBC do repositório de receitas; consulta receitas e seus ingredientes no banco de dados
 
 import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +21,7 @@ public class ReceitasRepositoryJDBC implements ReceitasRepository {
   }
 
   @Override
-  // Método recuperaReceita: public recuperaReceita — descrição breve 
+  // Busca uma receita pelo ID carregando os ingredientes associados; retorna null se não encontrada
   public Receita recuperaReceita(long id) {
     String sql = "SELECT r.id, r.titulo FROM receitas r WHERE r.id = ?";
     List<Receita> receitas = this.jdbcTemplate.query(

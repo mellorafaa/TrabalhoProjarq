@@ -1,5 +1,5 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Adaptadores.Apresentacao.Seguranca;
-// Classe JWTFilter: responsabilidade principal inferida pelo nome 
+// Interceptor HTTP que valida o token JWT Bearer em todas as requisições, exceto rotas públicas
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
