@@ -1,6 +1,6 @@
-# Trabalho1Projarq
+# TrabalhoProjarq
 
-Repositório: https://github.com/mellorafaa/Trabalho1Projarq.git
+Repositório: https://github.com/mellorafaa/TrabalhoProjarq.git
 
 Integrantes:
 - Gustavi Trevisol
