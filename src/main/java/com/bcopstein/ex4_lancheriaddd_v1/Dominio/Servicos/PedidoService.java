@@ -1,4 +1,6 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
@@ -28,5 +30,33 @@ public class PedidoService {
     );
     pedido.aprovar(valores.subtotal, valores.impostos, valores.desconto, valores.valorCobrado);
     return pedidoRepository.salvar(pedido);
+  }
+
+  public List<Pedido> listarTodos() {
+    return pedidoRepository.listarTodos();
+  }
+
+  public List<Pedido> listarPorClienteCpf(String cpf) {
+    return pedidoRepository.listarPorClienteCpf(cpf);
+  }
+
+  public List<Pedido> listarEntreguesEntreDatas(LocalDate inicio, LocalDate fim) {
+    return pedidoRepository.listarEntreguesEntreDatas(inicio, fim);
+  }
+
+  public List<Pedido> listarEntreguesEntreDatasParaCliente(String cpf, LocalDate inicio, LocalDate fim) {
+    return pedidoRepository.listarEntreguesEntreDatasParaCliente(cpf, inicio, fim);
+  }
+
+  public Pedido recuperarPorId(long id) {
+    return pedidoRepository.recuperarPorId(id);
+  }
+
+  public void atualizarStatus(long id, Pedido.Status novoStatus) {
+    pedidoRepository.atualizarStatus(id, novoStatus);
+  }
+
+  public void registrarPagamento(long id, LocalDateTime dataHoraPagamento) {
+    pedidoRepository.registrarPagamento(id, dataHoraPagamento);
   }
 }

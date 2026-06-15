@@ -4,22 +4,22 @@ package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
 import org.springframework.stereotype.Component;
 
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.CancelarPedidoResponse;
-import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 
 @Component
 public class CancelarPedidoUC {
 
-  private final PedidoRepository pedidoRepository;
+  private final PedidoService pedidoService;
 
-  public CancelarPedidoUC(PedidoRepository pedidoRepository) {
-    this.pedidoRepository = pedidoRepository;
+  public CancelarPedidoUC(PedidoService pedidoService) {
+    this.pedidoService = pedidoService;
   }
 
   // Tenta cancelar o pedido pelo ID; retorna false com motivo se o cancelamento não for permitido
   public CancelarPedidoResponse run(long idPedido) {
 
-    Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
+    Pedido pedido = pedidoService.recuperarPorId(idPedido);
     if (pedido == null) {
       return new CancelarPedidoResponse(
         false,
@@ -37,7 +37,7 @@ public class CancelarPedidoUC {
     }
 
     pedido.cancelar();
-    pedidoRepository.atualizarStatus(pedido.getId(), pedido.getStatus());
+    pedidoService.atualizarStatus(pedido.getId(), pedido.getStatus());
 
     return new CancelarPedidoResponse(
       true,
