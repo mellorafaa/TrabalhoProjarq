@@ -4,15 +4,15 @@ package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoResponse;
-import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 
 @Component
 public class ListarPedidosClienteUC {
 
-  private final PedidoRepository pedidoRepository;
+  private final PedidoService pedidoService;
 
-  public ListarPedidosClienteUC(PedidoRepository pedidoRepository) {
-    this.pedidoRepository = pedidoRepository;
+  public ListarPedidosClienteUC(PedidoService pedidoService) {
+    this.pedidoService = pedidoService;
   }
 
   // Busca os pedidos do cliente pelo CPF; lança exceção se o CPF for nulo ou vazio
@@ -20,7 +20,7 @@ public class ListarPedidosClienteUC {
     if (clienteCpf == null || clienteCpf.isBlank()) {
       throw new IllegalArgumentException("CPF do cliente não pode estar vazio");
     }
-    return pedidoRepository.listarPorClienteCpf(clienteCpf).stream()
+    return pedidoService.listarPorClienteCpf(clienteCpf).stream()
         .map(p -> new PedidoResponse(p, true, "OK", List.of()))
         .toList();
   }

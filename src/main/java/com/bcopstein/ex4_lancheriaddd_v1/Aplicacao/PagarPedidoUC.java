@@ -6,22 +6,22 @@ import java.time.LocalDateTime;
 import org.springframework.stereotype.Component;
 
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PagarPedidoResponse;
-import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.ICozinhaService;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.IPagamentoService;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 
 @Component
 public class PagarPedidoUC {
 
-  private final PedidoRepository pedidoRepository;
+  private final PedidoService pedidoService;
   private final IPagamentoService pagamentoService;
   private final ICozinhaService cozinhaService;
 
-  public PagarPedidoUC(PedidoRepository pedidoRepository,
+  public PagarPedidoUC(PedidoService pedidoService,
              IPagamentoService pagamentoService,
              ICozinhaService cozinhaService) {
-    this.pedidoRepository = pedidoRepository;
+    this.pedidoService = pedidoService;
     this.pagamentoService = pagamentoService;
     this.cozinhaService  = cozinhaService;
   }
@@ -29,7 +29,7 @@ public class PagarPedidoUC {
   // Processa o pagamento pelo ID; encaminha à cozinha se autorizado, retorna false caso contrário
   public PagarPedidoResponse run(long idPedido) {
 
-    Pedido pedido = pedidoRepository.recuperarPorId(idPedido);
+    Pedido pedido = pedidoService.recuperarPorId(idPedido);
     if (pedido == null) {
       return new PagarPedidoResponse(
         false,
@@ -59,7 +59,7 @@ public class PagarPedidoUC {
     }
 
     pedido.pagar();
-    pedidoRepository.registrarPagamento(idPedido, LocalDateTime.now());
+    pedidoService.registrarPagamento(idPedido, LocalDateTime.now());
 
     cozinhaService.chegadaDePedido(pedido);
 

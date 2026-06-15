@@ -5,20 +5,20 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PedidoResponse;
-import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Dados.PedidoRepository;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 
 @Component
 public class ListarPedidosEntreguesUC {
 
-  private final PedidoRepository pedidoRepository;
+  private final PedidoService pedidoService;
 
-  public ListarPedidosEntreguesUC(PedidoRepository pedidoRepository) {
-    this.pedidoRepository = pedidoRepository;
+  public ListarPedidosEntreguesUC(PedidoService pedidoService) {
+    this.pedidoService = pedidoService;
   }
 
   // Busca pedidos com status ENTREGUE criados no período informado
   public List<PedidoResponse> run(LocalDate inicio, LocalDate fim) {
-    return pedidoRepository.listarEntreguesEntreDatas(inicio, fim).stream()
+    return pedidoService.listarEntreguesEntreDatas(inicio, fim).stream()
         .map(p -> new PedidoResponse(p, true, "OK", List.of()))
         .toList();
   }
