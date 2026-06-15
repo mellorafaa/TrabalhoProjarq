@@ -1,4 +1,9 @@
+server:
+  port: 8081   # porta interna; o gateway fica em 8080
+
 spring:
+  application:
+    name: pizzaria-service   # nome usado pelo Eureka para descoberta
   profiles:
     active: dev
   datasource:
@@ -8,7 +13,7 @@ spring:
     password:
   sql:
     init:
-      mode: always   # executa schema.sql no boot
+      mode: always
     schema-locations: classpath:schema.sql
     data-locations: classpath:data.sql
   h2:
@@ -22,11 +27,15 @@ logging:
       springframework:
         jdbc: DEBUG
 
-# Configurações JWT
+# JWT ainda é necessário para GERAR o token no login
 jwt:
-  secret: mySecretKeyThatIsVeryLongAndSecureForTokenGeneration12345678901234567890
-  expiration: 86400000  # 24 horas em milissegundos
+  secret: ${JWT_SECRET:mySecretKeyThatIsVeryLongAndSecureForTokenGeneration12345678901234567890}
+  expiration: 86400000
 
-application:
-  name: ex4-lancheriaddd-v1
-  port: 8080
+# Configuração do Eureka (name server)
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka/}
+  instance:
+    prefer-ip-address: true
