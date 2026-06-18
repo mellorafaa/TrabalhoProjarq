@@ -1,6 +1,14 @@
 package com.bcopstein.ex4_lancheriaddd_v1.Aplicacao;
 // Caso de uso que processa o pagamento de um pedido aprovado e o encaminha para a cozinha
 
+// Orquestra:
+//   1. Busca do pedido pelo ID
+//   2. Validação de status (deve estar APROVADO)
+//   3. Processamento do pagamento via serviço de pagamento
+//   4. Atualização de status para PAGO
+//   5. Registro de data/hora do pagamento
+//   6. Envio para a fila da cozinha
+
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
@@ -19,67 +27,100 @@ public class PagarPedidoUC {
   private final ICozinhaService cozinhaService;
 
   public PagarPedidoUC(PedidoService pedidoService,
-             IPagamentoService pagamentoService,
-             ICozinhaService cozinhaService) {
+      IPagamentoService pagamentoService,
+      ICozinhaService cozinhaService) {
     this.pedidoService = pedidoService;
     this.pagamentoService = pagamentoService;
-    this.cozinhaService  = cozinhaService;
+    this.cozinhaService = cozinhaService;
   }
 
-  // Processa o pagamento pelo ID; encaminha à cozinha se autorizado, retorna false caso contrário
+  // Processa o pagamento pelo ID do pedido
+  // Retorna sucesso se autorizado e pedido encaminhado à cozinha, erro caso
+  // contrário
   public PagarPedidoResponse run(long idPedido) {
 
-    Pedido pedido = pedidoService.recuperarPorId(idPedido);
-    if (pedido == null) {
+    if (idPedido <= 0) {
       return new PagarPedidoResponse(
-        false,
-        "Pedido não encontrado com o id: " + idPedido,
-        idPedido,
-        null
-      );
+          false,
+          "ID do pedido inválido: " + idPedido + ". Deve ser maior que zero",
+          idPedido,
+          null);
     }
 
-    if (pedido.getStatus() != Pedido.Status.APROVADO) {
+    try {
+      Pedido pedido = pedidoService.recuperarPorId(idPedido);
+      if (pedido == null) {
+        return new PagarPedidoResponse(
+            false,
+            "Pedido não encontrado com o id: " + idPedido,
+            idPedido,
+            null);
+      }
+
+      // Verifica se o pedido está no status APROVADO (único status válido para
+      // pagamento)
+      if (pedido.getStatus() != Pedido.Status.APROVADO) {
+        return new PagarPedidoResponse(
+            false,
+            construirMotivoRejeicao(pedido.getStatus()),
+            idPedido,
+            pedido.getStatus().name());
+      }
+
+      // Processa o pagamento via serviço de pagamento
+      boolean autorizado = pagamentoService.processarPagamento(pedido);
+      if (!autorizado) {
+        return new PagarPedidoResponse(
+            false,
+            "Pagamento não autorizado para o pedido " + idPedido + ". Verifique saldo/limite.",
+            idPedido,
+            pedido.getStatus().name());
+      }
+
+      // Atualiza status do pedido para PAGO
+      pedido.pagar();
+
+      // Registra data e hora do pagamento
+      pedidoService.registrarPagamento(idPedido, LocalDateTime.now());
+
+      // Encaminha pedido para a fila da cozinha
+      cozinhaService.chegadaDePedido(pedido);
+
       return new PagarPedidoResponse(
-        false,
-        construirMotivoRejeicao(pedido.getStatus()),
-        idPedido,
-        pedido.getStatus().name()
-      );
-    }
+          true,
+          "Pagamento confirmado. Pedido " + idPedido + " encaminhado para a cozinha.",
+          idPedido,
+          Pedido.Status.PAGO.name());
 
-    boolean autorizado = pagamentoService.processarPagamento(pedido);
-    if (!autorizado) {
+    } catch (IllegalArgumentException e) {
+      // Erros de validação
       return new PagarPedidoResponse(
-        false,
-        "Pagamento não autorizado para o pedido " + idPedido + ".",
-        idPedido,
-        pedido.getStatus().name()
-      );
+          false,
+          "Erro de validação: " + e.getMessage(),
+          idPedido,
+          null);
+    } catch (RuntimeException e) {
+      // Outros erros inesperados
+      return new PagarPedidoResponse(
+          false,
+          "Erro ao processar pagamento: " + e.getMessage(),
+          idPedido,
+          null);
     }
-
-    pedido.pagar();
-    pedidoService.registrarPagamento(idPedido, LocalDateTime.now());
-
-    cozinhaService.chegadaDePedido(pedido);
-
-    return new PagarPedidoResponse(
-      true,
-      "Pagamento confirmado. Pedido " + idPedido + " encaminhado para a cozinha.",
-      idPedido,
-      Pedido.Status.PAGO.name()
-    );
   }
 
-  // Retorna mensagem de rejeição específica para cada status que impede o pagamento
+  // Retorna mensagem de rejeição específica para cada status que impede o
+  // pagamento
   private String construirMotivoRejeicao(Pedido.Status statusAtual) {
     return switch (statusAtual) {
+      case NOVO ->
+        "Pedido ainda não foi aprovado (status: NOVO). Aprove o pedido antes de pagar.";
       case PAGO ->
-        "Pedido já foi pago.";
+        "Pedido já foi pago. Não é possível pagar novamente.";
       case CANCELADO ->
         "Pedido foi cancelado e não pode ser pago.";
-      case NOVO ->
-        "Pedido ainda não foi aprovado (status: NOVO).";
+      case AGUARDANDO, PREPARACAO, PRONTO, TRANSPORTE, ENTREGUE ->
+        "Pedido já está em processo de entrega (status: " + statusAtual + "). Não pode ser pago.";
       default ->
         "Pedido não pode ser pago. Status atual: " + statusAtual + ".";
     };
