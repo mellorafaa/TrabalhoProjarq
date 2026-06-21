@@ -8,7 +8,7 @@ import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.ItemPedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.IEstoqueService;
 
 @Service
-@Profile("dev")
+@Profile("fake")
 public class EstoqueServiceFake implements IEstoqueService {
 
   @Override
