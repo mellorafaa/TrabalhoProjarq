@@ -20,6 +20,11 @@ spring:
     console:
       enabled: true
       path: /h2
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
 
 logging:
   level:
@@ -33,6 +38,9 @@ jwt:
   expiration: 86400000
 
 # Configuração do Eureka (name server)
+ms-estoque:
+  url: ${MS_ESTOQUE_URL:http://localhost:8082/api/v1}
+
 eureka:
   client:
     service-url:

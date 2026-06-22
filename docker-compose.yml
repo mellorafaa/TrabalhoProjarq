@@ -1,5 +1,23 @@
 services:
 
+  # ── 0. Message Broker (RabbitMQ) ────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - pizzaria-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # ── 1. Name Server (Eureka) ─────────────────────────────────────────────────
   eureka-server:
     build: ./eureka-server
@@ -28,8 +46,50 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
-  # ── 3. API Gateway ──────────────────────────────────────────────────────────
+  # ── 3. Microsserviço de Estoque ─────────────────────────────────────────────
+  ms-estoque:
+    build: ./ms-estoque
+    container_name: ms-estoque
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka/
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    networks:
+      - pizzaria-network
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # ── 4. Microsserviço de Entregas ────────────────────────────────────────────
+  ms-entregas:
+    build: ./ms-entregas
+    container_name: ms-entregas
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_URI=http://eureka-server:8761/eureka/
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    networks:
+      - pizzaria-network
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  # ── 5. API Gateway ──────────────────────────────────────────────────────────
   gateway:
     build: ./gateway
     container_name: gateway

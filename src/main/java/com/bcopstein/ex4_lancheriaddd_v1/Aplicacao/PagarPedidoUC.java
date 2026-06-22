@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.bcopstein.ex4_lancheriaddd_v1.Aplicacao.Responses.PagarPedidoResponse;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Entidades.Pedido;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.ICozinhaService;
+import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.IEntregaNotificacaoService;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.IPagamentoService;
 import com.bcopstein.ex4_lancheriaddd_v1.Dominio.Servicos.PedidoService;
 
@@ -25,13 +26,16 @@ public class PagarPedidoUC {
   private final PedidoService pedidoService;
   private final IPagamentoService pagamentoService;
   private final ICozinhaService cozinhaService;
+  private final IEntregaNotificacaoService entregaNotificacaoService;
 
   public PagarPedidoUC(PedidoService pedidoService,
       IPagamentoService pagamentoService,
-      ICozinhaService cozinhaService) {
+      ICozinhaService cozinhaService,
+      IEntregaNotificacaoService entregaNotificacaoService) {
     this.pedidoService = pedidoService;
     this.pagamentoService = pagamentoService;
     this.cozinhaService = cozinhaService;
+    this.entregaNotificacaoService = entregaNotificacaoService;
   }
 
   // Processa o pagamento pelo ID do pedido
@@ -85,6 +89,15 @@ public class PagarPedidoUC {
 
       // Encaminha pedido para a fila da cozinha
       cozinhaService.chegadaDePedido(pedido);
+
+      // Notifica ms-entregas via fila para iniciar a entrega
+      entregaNotificacaoService.notificarPedidoPago(
+          pedido.getId(),
+          pedido.getCliente().getCpf(),
+          pedido.getCliente().getNome(),
+          pedido.getEnderecoEntrega(),
+          LocalDateTime.now()
+      );
 
       return new PagarPedidoResponse(
           true,
