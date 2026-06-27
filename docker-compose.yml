@@ -1,6 +1,7 @@
 services:
 
   # ── 0. Message Broker (RabbitMQ) ────────────────────────────────────────────
+  # Singleton: 1 instância única
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
     container_name: rabbitmq
@@ -19,6 +20,7 @@ services:
       retries: 5
 
   # ── 1. Name Server (Eureka) ─────────────────────────────────────────────────
+  # Singleton: 1 instância única (registro central)
   eureka-server:
     build: ./eureka-server
     container_name: eureka-server
@@ -33,14 +35,19 @@ services:
       retries: 5
 
   # ── 2. Serviço de Pizzaria (monolito) ───────────────────────────────────────
+  # ESCALÁVEL: docker compose up --scale pizzaria-service=N
+  # Sem container_name (Compose gera nome único) e sem porta fixa do host
+  # para permitir N réplicas. O acesso ao serviço é feito SEMPRE pelo gateway.
   pizzaria-service:
     build: .
-    container_name: pizzaria-service
-    ports:
-      - "8081:8081"   # exposto para debug/testes; em produção remover
+    expose:
+      - "8081"
     environment:
       - EUREKA_URI=http://eureka-server:8761/eureka/
       - JWT_SECRET=mySecretKeyThatIsVeryLongAndSecureForTokenGeneration12345678901234567890
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - MS_ESTOQUE_URL=http://ms-estoque:8082/api/v1
     networks:
       - pizzaria-network
     depends_on:
@@ -50,11 +57,11 @@ services:
         condition: service_healthy
 
   # ── 3. Microsserviço de Estoque ─────────────────────────────────────────────
+  # ESCALÁVEL: docker compose up --scale ms-estoque=N
   ms-estoque:
     build: ./ms-estoque
-    container_name: ms-estoque
-    ports:
-      - "8082:8082"
+    expose:
+      - "8082"
     environment:
       - EUREKA_URI=http://eureka-server:8761/eureka/
       - RABBITMQ_HOST=rabbitmq
@@ -70,11 +77,14 @@ services:
         condition: service_healthy
 
   # ── 4. Microsserviço de Entregas ────────────────────────────────────────────
+  # ESCALÁVEL (>= 3 instâncias por requisito do enunciado):
+  # docker compose up --scale ms-entregas=3
+  # Todas as instâncias consomem da MESMA fila (competing consumers),
+  # garantindo que cada mensagem é processada uma única vez.
   ms-entregas:
     build: ./ms-entregas
-    container_name: ms-entregas
-    ports:
-      - "8083:8083"
+    expose:
+      - "8083"
     environment:
       - EUREKA_URI=http://eureka-server:8761/eureka/
       - RABBITMQ_HOST=rabbitmq
@@ -90,11 +100,13 @@ services:
         condition: service_healthy
 
   # ── 5. API Gateway ──────────────────────────────────────────────────────────
+  # Singleton: única porta de entrada (8080) com load balancer integrado
+  # (Spring Cloud LoadBalancer + Eureka Discovery: lb://<servico>)
   gateway:
     build: ./gateway
     container_name: gateway
     ports:
-      - "8080:8080"   # único ponto de entrada para os clientes
+      - "8080:8080"
     environment:
       - EUREKA_URI=http://eureka-server:8761/eureka/
       - JWT_SECRET=mySecretKeyThatIsVeryLongAndSecureForTokenGeneration12345678901234567890

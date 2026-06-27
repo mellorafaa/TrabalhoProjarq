@@ -11,9 +11,23 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+      # Rotas explicitas com load balancer (lb://) sobre as N instancias
+      # de cada microsservico descobertas via Eureka.
+      # A ORDEM importa: predicados mais especificos vem primeiro.
       routes:
-        # Rota única: encaminha tudo para o serviço da pizzaria
-        # lb:// usa o Eureka para descobrir o endereço do serviço
+        # ms-estoque: balanceia entre as N instancias do estoque
+        - id: ms-estoque
+          uri: lb://ms-estoque
+          predicates:
+            - Path=/api/v1/estoque/**
+
+        # ms-entregas: balanceia entre as N instancias de entregas
+        - id: ms-entregas
+          uri: lb://ms-entregas
+          predicates:
+            - Path=/api/v1/entregas/**
+
+        # pizzaria-service: rota catch-all balanceada entre as N instancias do monolito
         - id: pizzaria-service
           uri: lb://pizzaria-service
           predicates:
@@ -22,7 +36,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka-server:8761/eureka/
+      defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka/}
   instance:
     prefer-ip-address: true
 
@@ -33,4 +47,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,gateway

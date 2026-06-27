@@ -28,11 +28,22 @@ eureka:
       defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    # instance-id unico por replica (necessario para Compose --scale,
+    # caso contrario varias replicas se registram com o mesmo id).
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 server:
   port: 8083
   servlet:
     context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
 
 logging:
   level:

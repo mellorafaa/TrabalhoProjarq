@@ -59,6 +59,11 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         if ("/autenticacao/login".equals(path)) return true;
         if (path.startsWith("/clientes") && HttpMethod.POST.equals(method)) return true;
         if (path.startsWith("/health") || path.startsWith("/actuator")) return true;
+        // Endpoints de diagnostico de load balancer (verificar qual instancia
+        // respondeu cada requisicao). Liberados para facilitar a validacao.
+        if ("/instancia".equals(path)) return true;
+        if (path.equals("/api/v1/estoque/instancia")) return true;
+        if (path.equals("/api/v1/entregas/instancia")) return true;
         return false;
     }
 

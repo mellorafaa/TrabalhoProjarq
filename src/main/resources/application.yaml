@@ -28,22 +28,30 @@ spring:
 
 logging:
   level:
-    org:
-      springframework:
-        jdbc: DEBUG
+    com.bcopstein: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 # JWT ainda é necessário para GERAR o token no login
 jwt:
   secret: ${JWT_SECRET:mySecretKeyThatIsVeryLongAndSecureForTokenGeneration12345678901234567890}
   expiration: 86400000
 
-# Configuração do Eureka (name server)
+# URL do ms-estoque. O host "ms-estoque" e resolvido pelo DNS interno
+# do Docker Compose, que faz round-robin entre TODAS as replicas escaladas
+# do servico (load balancer lado cliente via DNS). Cada chamada pode bater
+# em uma replica diferente sem precisar de configuracao extra.
 ms-estoque:
-  url: ${MS_ESTOQUE_URL:http://localhost:8082/api/v1}
+  url: ${MS_ESTOQUE_URL:http://ms-estoque:8082/api/v1}
 
 eureka:
   client:
     service-url:
       defaultZone: ${EUREKA_URI:http://eureka-server:8761/eureka/}
+    fetch-registry: true
+    register-with-eureka: true
   instance:
     prefer-ip-address: true
+    # instance-id unico por replica (necessario para Compose --scale,
+    # caso contrario varias replicas se registram com o mesmo id).
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
